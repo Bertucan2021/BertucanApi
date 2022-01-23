@@ -18,6 +18,8 @@ class CreateGBVCentersTable extends Migration
             $table->string('name', 20)->nullable();
             $table->string('description', 255)->nullable();
             $table->string('phone_number', 20)->nullable(); 
+            $table->bigInteger('address_id')->unsigned()->nullable();  
+            $table->bigInteger('membership_id')->unsigned()->nullable();  
             $table->foreign('address_id')->references('id')->on('addresses');
             $table->foreign('membership_id')->references('id')->on('memberships');
             $table->text('license')->nullable();

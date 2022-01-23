@@ -20,7 +20,7 @@ class CreateArticlesTable extends Migration
             $table->text('icon')->nullable(); 
             $table->text('body')->nullable();
             $table->text('small_description')->nullable();
-            $table->text('article_by')->nullable();
+            $table->bigInteger('article_by')->nullable();
             $table->string('type', '255')->nullable();
             $table->foreign('article_by')->references('id')->on('users');
            
