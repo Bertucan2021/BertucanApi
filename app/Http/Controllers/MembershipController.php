@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Exception;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use App\Models\Membership;
 use App\Http\Requests\StoreMembershipRequest;
 use App\Http\Requests\UpdateMembershipRequest;
@@ -26,12 +28,20 @@ class MembershipController extends Controller
      */
     public function store(StoreMembershipRequest $request)
     {
+        try{
          $membership= $request->validated();
          $membership_exist= Membership::where('name',$membership['name'])->where('status','!=','deleted')->first();
          if(!$membership_exist){
              $new_membership= new Membership($membership);
              $new_membership->status='active';
          }
+        }catch (Exception $ex) { // Anything that went wrong
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+            }
     }
 
     /**
