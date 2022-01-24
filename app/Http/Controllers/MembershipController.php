@@ -34,6 +34,7 @@ class MembershipController extends Controller
          if(!$membership_exist){
              $new_membership= new Membership($membership);
              $new_membership->status='active';
+             $new_membership->save();
          }
         }catch (Exception $ex) { // Anything that went wrong
             return response()
