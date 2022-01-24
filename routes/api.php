@@ -18,5 +18,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/user','UserController@index');
-
+Route::get('/users','UserController@index');
+Route::post('/memberships','MembershipController@store');

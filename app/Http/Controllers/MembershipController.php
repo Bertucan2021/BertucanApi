@@ -16,17 +16,7 @@ class MembershipController extends Controller
     public function index()
     {
         //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    } 
 
     /**
      * Store a newly created resource in storage.
@@ -36,7 +26,12 @@ class MembershipController extends Controller
      */
     public function store(StoreMembershipRequest $request)
     {
-        //
+         $membership= $request->validated();
+         $membership_exist= Membership::where('name',$membership['name'])->where('status','!=','deleted')->first();
+         if(!$membership_exist){
+             $new_membership= new Membership($membership);
+             $new_membership->status='active';
+         }
     }
 
     /**

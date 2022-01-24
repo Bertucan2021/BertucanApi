@@ -20,7 +20,7 @@ class UserController extends Controller
     {
         try {
             $user = User::where('status', '!=', 'deleted')
-                ->orWhereNull('status')->get()
+                ->orWhereNull('log_status')->get()
                 ->each(function ($item, $key) {
                     $item->address;
                     $item->membership;
@@ -53,25 +53,6 @@ class UserController extends Controller
         }
     }
      
-     
-    public function userCountByDate($attribute, $start, $end)
-    {
-        try {
-            $items = User::orderBy($attribute)->whereBetween($attribute, [$start, $end])->get()->groupBy(function ($item) {
-                return $item->created_at->format('Y-m-d');
-            });
-        } catch (Exception $e) {
-            return response()
-                ->json("There is no such attribute.", Response::HTTP_OK);
-        }
-        foreach ($items as $key => $item) {
-            $day = $key;
-            $totalCount = $item->count();
-            $items[$key] = $totalCount;
-        }
-        return response()
-            ->json($items, Response::HTTP_OK);
-    }
     public function login(Request $request)
     {
         try {
