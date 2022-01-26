@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Ad extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'company_id',
+        'ad_type',
+        'image',
+        'status'
+    ];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ]; 
 }

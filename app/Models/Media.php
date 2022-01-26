@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Media extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'item_id',
+        'url',
+        'type',
+    ];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ]; 
 }

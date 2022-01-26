@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class GBVCenter extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'description',
+        'phone_number',
+        'address_id',
+        'membership_id',
+        'license'
+    ];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ]; 
 }

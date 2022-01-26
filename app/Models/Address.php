@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Address extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'country',
+        'city',
+        'latitude',
+        'longitude',
+        'type',
+    ];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ]; 
 }
