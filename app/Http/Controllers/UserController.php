@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-
+use App\Http\Requests\StoreUserRequest;
 class UserController extends Controller
 { 
     public function index()
@@ -67,55 +67,54 @@ class UserController extends Controller
                         Response::HTTP_BAD_REQUEST
                     );
             }
-        $user = User::where('email', $request->email)->where('status','!=','blocked')->first();
-        if ($user) {
-            if (Hash::check($request->password, $user->password)) {
-                $token = $user->createToken('Laravel Password Grant', [$user->type])->accessToken;
-                $user['remember_token'] = $token;
-                if ($user->save()) {
-                    $user->address;
-                    $user->membership;
-                    return response()
-                ->json(
-                    HelperClass::responeObject($user, true, Response::HTTP_OK,'User found',"User is succesfully loged in.",""),
-                    Response::HTTP_OK
-                );
-                }else{
+            $user = User::where('email', $request->email)->where('status','!=','blocked')->first();
+            if ($user) {
+                if (Hash::check($request->password, $user->password)) {
+                    $token = $user->createToken('Bertucan access token', [$user->type])->accessToken;
+                    $user['remember_token'] = $token;
+                    if ($user->save()) {
+                        $user->address; 
+                        return response()
+                    ->json(
+                        HelperClass::responeObject($user, true, Response::HTTP_OK,'User found',"User is succesfully loged in.",""),
+                        Response::HTTP_OK
+                    );
+                    }else{
+                        return response()
+                        ->json(
+                            HelperClass::responeObject($user, true, Response::HTTP_INTERNAL_SERVER_ERROR,'Internal Error',"","An error occured while trying to log in."),
+                            Response::HTTP_INTERNAL_SERVER_ERROR
+                        );
+                    }                    
+                } else {
                     return response()
                     ->json(
-                        HelperClass::responeObject($user, true, Response::HTTP_INTERNAL_SERVER_ERROR,'Internal Error',"","An error occured while trying to log in."),
-                        Response::HTTP_INTERNAL_SERVER_ERROR
+                        HelperClass::responeObject(null, false, Response::HTTP_CONFLICT,'Password issue.',"The password doesnt match the email.",""),
+                        Response::HTTP_CONFLICT
                     );
                 }
-                
             } else {
                 return response()
-                ->json(
-                    HelperClass::responeObject(null, false, Response::HTTP_CONFLICT,'Password issue.',"The password doesnt match the email.",""),
-                    Response::HTTP_CONFLICT
-                );
+                    ->json(
+                        HelperClass::responeObject(null, false, Response::HTTP_NOT_FOUND,'User doesnt exist.',"The is no registered user by this email.",""),
+                        Response::HTTP_NOT_FOUND
+                    );
             }
-        } else {
+        
+        }catch (ModelNotFoundException $ex) { // User not found
+                return response()
+                    ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'The model doesnt exist.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        } catch (Exception $ex) { // Anything that went wrong
             return response()
                 ->json(
-                    HelperClass::responeObject(null, false, Response::HTTP_NOT_FOUND,'User doesnt exist.',"The is no registered user by this email.",""),
-                    Response::HTTP_NOT_FOUND
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_INTERNAL_SERVER_ERROR, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_INTERNAL_SERVER_ERROR
                 );
         }
-    
-} catch (ModelNotFoundException $ex) { // User not found
-    return response()
-        ->json(
-            HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'The model doesnt exist.', "", $ex->getMessage()),
-            Response::HTTP_UNPROCESSABLE_ENTITY
-        );
-} catch (Exception $ex) { // Anything that went wrong
-    return response()
-        ->json(
-            HelperClass::responeObject(null, false, RESPONSE::HTTP_INTERNAL_SERVER_ERROR, 'Internal server error.', "", $ex->getMessage()),
-            Response::HTTP_INTERNAL_SERVER_ERROR
-        );
-}}
+    }
     public function logout(Request $request)
     {
         try{
@@ -149,32 +148,9 @@ class UserController extends Controller
             Response::HTTP_UNPROCESSABLE_ENTITY
         );
 }} 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
         try {
-            $validatedData = Validator::make($request->all(), [
-                'first_name' => ['required','max:20'],
-                'last_name' => ['required','max:20'],
-                'email' => ['required','max:255'],
-                'password' => ['required','max:12'],
-                'phone_number' => ['required','max:30'], 
-                'birthdate' => ['required','max:15'],
-                'type' => ['required',Rule::in(['user','organization','hr','operations'])], 
-                'membership_id' => ['required','numeric'],
-                'address.latitude' => ['required'],
-                'address.longitude' => ['required'],
-                'address.country' => ['required', 'max:50'],
-                'address.city' => ['required', 'max:50'],
-                'address.type' => ['required', 'max:10', Rule::in(['user'])]
-
-            ]);
-            if ($validatedData->fails()) {
-                return response()
-                    ->json(
-                        HelperClass::responeObject(null, false, Response::HTTP_BAD_REQUEST, "Validation failed check JSON request", "", $validatedData->errors()),
-                        Response::HTTP_BAD_REQUEST
-                    );
-            }
         $input = $request->all();
         $user = User::where('email', $request->email)->first();
         if (!$user) {
@@ -186,29 +162,28 @@ class UserController extends Controller
                     Response::HTTP_CONFLICT
                 );
             }
-            $membership = Membership::where('id', $request->membership_id)->where('status','=','active')->first();
+            /* $membership = Membership::where('id', $request->membership_id)->where('status','=','active')->first();
             if(!$membership){
                 return response()
                 ->json(
                     HelperClass::responeObject(null, false, Response::HTTP_CONFLICT,'Membership doesnt exist.', "",  "Membership doesnt exist."),
                     Response::HTTP_CONFLICT
                 );
-            }
+            } */
             $user = new User($input);
             $user->password = Hash::make($request->password);
-            $user->remember_token  = $user->createToken('Laravel Password Grant')->accessToken;
-            $address = $request->address;
-            $address = Address::create($address);
-             
-            $user->status = "active";
-                $user->address_id = $address->id;
-                if($user->save()){
-                     
+            $user->remember_token  = $user->createToken('Bertucan access token')->accessToken;
+            if($request->address){
+                $address = $request->address;
+                $address = Address::create($address);            
+                $user->address_id = $address->id; 
+            }                       
+                $user->status = "active";
+                if($user->save()){                     
                     $user->address;
-                    $user->membership;
                     return response()
                 ->json(
-                    HelperClass::responeObject($user, true, Response::HTTP_CREATED,'User created.',"A user is created by the details given.",""),
+                    HelperClass::responeObject($user, true, Response::HTTP_CREATED,'User created.',"A user is created.",""),
                     Response::HTTP_CREATED
                 );
                 }else{
@@ -221,7 +196,7 @@ class UserController extends Controller
         } else {
             return response()
                 ->json(
-                    HelperClass::responeObject(null, false, Response::HTTP_CONFLICT,'User already exist.', "",  "A user already exist by this email "),
+                    HelperClass::responeObject(null, false, Response::HTTP_CONFLICT,'User already exist.', "",  "A user already exist by this email."),
                     Response::HTTP_CONFLICT
                 );
         }
@@ -240,131 +215,7 @@ class UserController extends Controller
     }
     }
 
-     public function search(Request $request)
-    {
-        try {
-            $validatedData = Validator::make($request->all(), [
-                'first_name' => ['max:20'],
-                'last_name' => ['max:20'],
-                'email' => ['max:255'],
-                'phone_number' => ['max:30'],
-                'status' => ['max:255'],
-                'birthdate' => ['max:15'],
-                'type' => ['numeric'],
-                'address_id' => ['numeric'],
-                'membership_id' => ['numeric']
-            ]);
-            if ($validatedData->fails()) {
-                return response()
-                    ->json(
-                        HelperClass::responeObject(null, false, Response::HTTP_BAD_REQUEST, "Validation failed check JSON request", "", $validatedData->errors()),
-                        Response::HTTP_BAD_REQUEST
-                    );
-            }
-        $input = $request->all();
-        $users = User::all();
-        $col = DB::getSchemaBuilder()->getColumnListing('users');
-        /* $user = $request->user();
-            if($user){
-                $request->request->add(['id' => $user->id]);
-            }  */
-        $requestKeys = collect($request->all())->keys();
-        foreach ($requestKeys as $key) {
-            if (empty($users)) {
-                return response()->json($users, 200);
-            }
-            if (in_array($key, $col)) {
-                $users = $users->where($key, $input[$key])->values();
-            }
-        }
-        $users->each(function ($item, $key) {
-            $item->address;
-            $item->membership;
-        });
-        return response()->json($users, 200);
-    }catch (ModelNotFoundException $ex) { // User not found
-        return response()
-            ->json(
-                HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'The model doesnt exist.', "", $ex->getMessage()),
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-    } catch (Exception $ex) { // Anything that went wrong
-        return response()
-            ->json(
-                HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal error occured.', "", $ex->getMessage()),
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-    }
 
-    }
-
-      public function update(Request $request, $id)
-    {
-        try {
-            $validatedData = Validator::make($request->all(), [
-                'first_name' => ['max:20'],
-                'last_name' => ['max:20'],
-                'email' => ['max:255'],
-                'phone_number' => ['max:30'],
-                'status' => ['max:255'],
-                'birthdate' => ['max:15'],
-                'type' => ['numeric'],
-                'address_id' => ['numeric'],
-                'memebrship_id' => ['numeric']
-            ]);
-            if ($validatedData->fails()) {
-                return response()
-                    ->json(
-                        HelperClass::responeObject(null, false, Response::HTTP_BAD_REQUEST, "Validation failed check JSON request", "", $validatedData->errors()),
-                        Response::HTTP_BAD_REQUEST
-                    );
-            }
-            $input = $request->all();
-            $user = User::where('id', $id)->first();
-            
-            if ($request->address) {
-                $address_to_be_updated = $request->address;
-                $address = Address::where('id', $user->bartering_location_id)->first();
-                $address->city = $address_to_be_updated['city'];
-                $address->country = $address_to_be_updated['country'];
-                $address->latitude = (float)$address_to_be_updated['latitude'];
-                $address->longitude = (float)$address_to_be_updated['longitude'];
-                $address->save();
-            }
-            $user_to_be_updated = $user->fill($input);
-            $user_to_be_updated->status=$user->status;
-            if ($request->password) {
-                $user_to_be_updated->password = Hash::make($request->password);
-            }
-            if ($user_to_be_updated->save()) {
-                $user_to_be_updated->address;
-                $user_to_be_updated->membership;
-                return response()
-                    ->json(
-                        HelperClass::responeObject($user_to_be_updated, true, Response::HTTP_CREATED, 'User updated.', "The user is updated sucessfully.", ""),
-                        Response::HTTP_CREATED
-                    );
-            } else {
-                return response()
-                    ->json(
-                        HelperClass::responeObject($user_to_be_updated, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "", "This user couldnt be updated."),
-                        Response::HTTP_INTERNAL_SERVER_ERROR
-                    );
-            }
-        } catch (ModelNotFoundException $ex) { // User not found
-            return response()
-                ->json(
-                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'The model doesnt exist.', "", $ex->getMessage()),
-                    Response::HTTP_UNPROCESSABLE_ENTITY
-                );
-        } catch (Exception $ex) { // Anything that went wrong
-            return response()
-                ->json(
-                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
-                    Response::HTTP_UNPROCESSABLE_ENTITY
-                );
-        }
-    }
     public function destroy(Request $request)
     {
         try {
