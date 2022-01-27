@@ -118,36 +118,38 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         try{
-        $token = $request->user()->token(); 
-        $token->revoke();
-        $user = User::where('id', $token->user_id)->first();
-        $user['remember_token'] = '';
-        if($user->save()){ 
-        return response()
-        ->json(
-            HelperClass::responeObject(null, true, RESPONSE::HTTP_OK, 'Successfully logged out', "You have been successfully logged out!", ""),
-            Response::HTTP_OK
-        );
-    }else{
-        return response()
-        ->json(
-            HelperClass::responeObject(null, true, RESPONSE::HTTP_INTERNAL_SERVER_ERROR, 'logout failure.', "We could not successfully log out your account please try again!", ""),
-            Response::HTTP_INTERNAL_SERVER_ERROR
-        );
+            $token = $request->user()->token(); 
+            $token->revoke();
+            $user = User::where('id', $token->user_id)->first();
+            $user->remember_token = '';
+            if($user->save()){ 
+                return response()
+                ->json(
+                    HelperClass::responeObject(null, true, RESPONSE::HTTP_OK, 'Successfully logged out', "You have been successfully logged out!", ""),
+                    Response::HTTP_OK
+                );
+            }else{
+                return response()
+                ->json(
+                    HelperClass::responeObject(null, true, RESPONSE::HTTP_INTERNAL_SERVER_ERROR, 'logout failure.', "We could not successfully log out your account please try again!", ""),
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+        } catch (ModelNotFoundException $ex) { // User not found
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'The model doesnt exist.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        } catch (Exception $ex) { // Anything that went wrong
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
     }
-} catch (ModelNotFoundException $ex) { // User not found
-    return response()
-        ->json(
-            HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'The model doesnt exist.', "", $ex->getMessage()),
-            Response::HTTP_UNPROCESSABLE_ENTITY
-        );
-} catch (Exception $ex) { // Anything that went wrong
-    return response()
-        ->json(
-            HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
-            Response::HTTP_UNPROCESSABLE_ENTITY
-        );
-}} 
+
     public function store(StoreUserRequest $request)
     {
         try {
