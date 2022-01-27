@@ -120,7 +120,7 @@ class UserController extends Controller
         try{
         $token = $request->user()->token(); 
         $token->revoke();
-        $user = User::where('id', $token->user_id)->first();
+        $user = User::where('id', 1)->first();
         $user['remember_token'] = '';
         if($user->save()){ 
         return response()
