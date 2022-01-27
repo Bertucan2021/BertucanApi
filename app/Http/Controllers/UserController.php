@@ -178,7 +178,7 @@ class UserController extends Controller
                 $address = Address::create($address);            
                 $user->address_id = $address->id; 
             }                       
-                $user->status = "active";
+                //$user->status = "active";
                 if($user->save()){                     
                     $user->address;
                     return response()
