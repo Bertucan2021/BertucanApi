@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->bigInteger('membership_id')->unsigned()->nullable();
             $table->rememberToken();
+            //size of remembertoken needs to be changed after migration
             $table->timestamps();
             $table->foreign('address_id')->references('id')->on('addresses');
             $table->foreign('membership_id')->references('id')->on('memberships');

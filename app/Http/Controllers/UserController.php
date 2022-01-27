@@ -70,7 +70,7 @@ class UserController extends Controller
             $user = User::where('email', $request->email)->where('status','!=','blocked')->first();
             if ($user) {
                 if (Hash::check($request->password, $user->password)) {
-                    $token = $user->createToken('Bertucan access token', [$user->type])->accessToken;
+                    $token = $user->createToken('Bertucan access token', [$user->role])->accessToken;
                     $user['remember_token'] = $token;
                     if ($user->save()) {
                         $user->address; 
@@ -172,7 +172,8 @@ class UserController extends Controller
             } */
             $user = new User($input);
             $user->password = Hash::make($request->password);
-            $user->remember_token  = $user->createToken('Bertucan access token')->accessToken;
+            $user->role="user";
+            $user->remember_token  = $user->createToken('Bertucan access token',[$user->role])->accessToken;
             if($request->address){
                 $address = $request->address;
                 $address = Address::create($address);            
