@@ -119,7 +119,7 @@ class UserController extends Controller
     {
         try{
             $token = $request->user()->token(); 
-            $token->revoke();
+           /* $token->revoke();
             $user = User::where('id', $token->user_id)->first();
             $user->remember_token = '';
             if($user->save()){ 
@@ -134,7 +134,7 @@ class UserController extends Controller
                     HelperClass::responeObject(null, true, RESPONSE::HTTP_INTERNAL_SERVER_ERROR, 'logout failure.', "We could not successfully log out your account please try again!", ""),
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
-            }
+            }*/
         } catch (ModelNotFoundException $ex) { // User not found
             return response()
                 ->json(

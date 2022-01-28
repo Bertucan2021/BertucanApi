@@ -20,8 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/users','UserController@index');
 Route::post('/users','UserController@store');
-Route::middleware('auth:api')->group(function () {
-    
+Route::middleware('auth:api')->group(function () {    
     Route::post('/users/logout', 'UserController@logout');
 });
 Route::post('/memberships','MembershipController@store');
