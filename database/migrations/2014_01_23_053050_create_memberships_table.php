@@ -20,7 +20,7 @@ class CreateMembershipsTable extends Migration
             $table->string('type')->default('user')->nullable();
             $table->integer('show_ad')->nullable();
             $table->integer('add_per_minute')->nullable();
-            $table->integer('allowed_add_per_month')->nullable(); //for companies
+            $table->integer('allowed_ad_per_month')->nullable(); //for companies
             $table->timestamps();
         });
     }
