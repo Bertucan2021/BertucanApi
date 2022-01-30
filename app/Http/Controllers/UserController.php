@@ -67,7 +67,7 @@ class UserController extends Controller
                         Response::HTTP_BAD_REQUEST
                     );
             }
-            $user = User::where('email', $request->email)->where('status','!=','blocked')->first();
+            $user = User::where('email', $request->email)->first();
             if ($user) {
                 if (Hash::check($request->password, $user->password)) {
                     $token = $user->createToken('Laravel Password Grant', [$user->role])->accessToken;
