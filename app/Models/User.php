@@ -23,14 +23,15 @@ class User extends Authenticatable
         'role',
         'address_id',
         'email_verified_at',
-        'membership_id'
+        'membership_id',
+        'remember_token'
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',
     ]; 
     protected $hidden = [
         'password',
-        'remember_token',
+        
     ];
  
     

@@ -175,7 +175,7 @@ class UserController extends Controller
             $user = new User($input);
             $user->password = Hash::make($request->password);
             $user->role="user";
-            $user->remember_token  = $user->createToken('Laravel Password Grant')->accessToken;
+            $user->remember_token  = $user->createToken('Laravel Password Grant',[$user->role])->accessToken;
             if($request->address){
                 $address = $request->address;
                 $address = Address::create($address);            
