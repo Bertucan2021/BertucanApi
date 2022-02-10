@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['https://bertucanfrontadmin-ko0r6zs1u-bertu.vercel.app/'],
 
     'allowed_origins_patterns' => [],
 
