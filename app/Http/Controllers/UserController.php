@@ -89,15 +89,15 @@ class UserController extends Controller
                 } else {
                     return response()
                     ->json(
-                        HelperClass::responeObject(null, false, Response::HTTP_CONFLICT,'Password issue.',"The password doesnt match the email.",""),
-                        Response::HTTP_CONFLICT
+                        HelperClass::responeObject(null, false, Response::HTTP_UNAUTHORIZED,'Password issue.',"The password doesnt match the email.",""),
+                        Response::HTTP_UNAUTHORIZED
                     );
                 }
             } else {
                 return response()
                     ->json(
-                        HelperClass::responeObject(null, false, Response::HTTP_NOT_FOUND,'User doesnt exist.',"The is no registered user by this email.",""),
-                        Response::HTTP_NOT_FOUND
+                        HelperClass::responeObject(null, false, Response::HTTP_UNAUTHORIZED,'User doesnt exist.',"The is no registered user by this email.",""),
+                        Response::HTTP_UNAUTHORIZED
                     );
             }
         
@@ -131,8 +131,8 @@ class UserController extends Controller
             }else{
                 return response()
                 ->json(
-                    HelperClass::responeObject(null, true, RESPONSE::HTTP_INTERNAL_SERVER_ERROR, 'logout failure.', "We could not successfully log out your account please try again!", ""),
-                    Response::HTTP_INTERNAL_SERVER_ERROR
+                    HelperClass::responeObject(null, true, RESPONSE::HTTP_UNAUTHORIZED, 'logout failure.', "We could not successfully log out your account please try again!", ""),
+                    Response::HTTP_UNAUTHORIZED
                 );
             }
         } catch (ModelNotFoundException $ex) { // User not found
