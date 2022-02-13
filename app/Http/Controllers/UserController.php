@@ -76,7 +76,7 @@ class UserController extends Controller
                         $user->address; 
                         return response()
                     ->json(
-                        HelperClass::responeObject($user, true, Response::HTTP_OK,'User found',"User is succesfully loged in.",""),
+                        HelperClass::responeObject($user, true, Response::HTTP_OK,'User found',"User is succesfully logged in.",""),
                         Response::HTTP_OK
                     );
                     }else{
@@ -89,14 +89,14 @@ class UserController extends Controller
                 } else {
                     return response()
                     ->json(
-                        HelperClass::responeObject(null, false, Response::HTTP_UNAUTHORIZED,'Password issue.',"The password doesnt match the email.",""),
+                        HelperClass::responeObject(null, false, Response::HTTP_UNAUTHORIZED,'Password issue.',"Incorrect password.",""),
                         Response::HTTP_UNAUTHORIZED
                     );
                 }
             } else {
                 return response()
                     ->json(
-                        HelperClass::responeObject(null, false, Response::HTTP_UNAUTHORIZED,'User doesnt exist.',"The is no registered user by this email.",""),
+                        HelperClass::responeObject(null, false, Response::HTTP_UNAUTHORIZED,'User doesnt exist.',"No registered user by this email.",""),
                         Response::HTTP_UNAUTHORIZED
                     );
             }
