@@ -25,7 +25,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/users','UserController@index');
 });
 Route::post('/memberships','MembershipController@store');
+
+Route::post('/users/login', 'UserController@login');
+
 Route::middleware(['cors'])->group(function () {
     
-Route::post('/users/login', 'UserController@login');
 });
