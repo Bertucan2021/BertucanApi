@@ -24,7 +24,16 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/users/logout', 'UserController@logout');
     Route::get('/users','UserController@index');
 });
+Route::get('/articles','ArticleController@index');
+Route::post('/articles','ArticleController@store');
+Route::put('/articles','ArticleController@update');
+Route::delete('/articles','ArticleController@destroy');
+
+Route::get('/memberships','MembershipController@index');
 Route::post('/memberships','MembershipController@store');
+Route::put('/memberships','MembershipController@update');
+Route::delete('/memberships','MembershipController@destroy');
+ 
 
 Route::post('/users/login', 'UserController@login');
 
