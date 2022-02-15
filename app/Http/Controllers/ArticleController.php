@@ -53,6 +53,7 @@ class ArticleController extends Controller
         try {
             $input = $request->all();
             $article= new Article($input);
+            $article->status="active";
             if($article->save()){
                 return response()
                 ->json(

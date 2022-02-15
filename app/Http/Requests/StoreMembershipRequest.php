@@ -27,8 +27,8 @@ class StoreMembershipRequest extends FormRequest
             'name' => ['required', 'max:30'],
             'type' => ['required'],
             'show_ad' => ['required'],
-            'add_per_minute' => ['required'],
-            'allowed_add_per_month' => ['required'],
+            'ad_per_minute' => ['required'],
+            'allowed_ad_per_month' => ['required'],
 
         ];
     }
