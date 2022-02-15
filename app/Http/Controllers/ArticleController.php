@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Symfony\Component\HttpFoundation\Response;
 use App\Models\Article;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ArticleController extends Controller

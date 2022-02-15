@@ -17,7 +17,28 @@ class MembershipController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $allMembership = Membership::where('status', 'active')->get();
+            //->each(function($article, $key)){$article->media;};
+            return response()
+                ->json(
+                    HelperClass::responeObject(
+                        $allMembership,
+                        true,
+                        Response::HTTP_OK,
+                        'Successfully fetched.',
+                        "Active memberships are fetched sucessfully.",
+                        ""
+                    ),
+                    Response::HTTP_OK
+                );
+        } catch (Exception $ex) {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
     } 
 
     /**

@@ -163,15 +163,7 @@ class UserController extends Controller
                             HelperClass::responeObject(null, false, Response::HTTP_CONFLICT, 'User already exist.', "",  "A user already exist by this phonenumber "),
                             Response::HTTP_CONFLICT
                         );
-                }
-                /* $membership = Membership::where('id', $request->membership_id)->where('status','=','active')->first();
-            if(!$membership){
-                return response()
-                ->json(
-                    HelperClass::responeObject(null, false, Response::HTTP_CONFLICT,'Membership doesnt exist.', "",  "Membership doesnt exist."),
-                    Response::HTTP_CONFLICT
-                );
-            } */
+                } 
                 $user = new User($input);
                 $user->password = Hash::make($request->password);
                 $user->role = "user";

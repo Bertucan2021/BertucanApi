@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use Symfony\Component\HttpFoundation\Response;
 use App\Models\GBVCenter;
 use App\Http\Requests\StoreGBVCenterRequest;
 use App\Http\Requests\UpdateGBVCenterRequest;
@@ -15,18 +17,29 @@ class GBVCenterController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+        try {
+            $allGBVCenter = GBVCenter::where('status', 'active')->get();
+            //->each(function($article, $key)){$article->media;};
+            return response()
+                ->json(
+                    HelperClass::responeObject(
+                        $allGBVCenter,
+                        true,
+                        Response::HTTP_OK,
+                        'Successfully fetched.',
+                        "Active GBV centers are fetched sucessfully.",
+                        ""
+                    ),
+                    Response::HTTP_OK
+                );
+        } catch (Exception $ex) {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
+    } 
 
     /**
      * Store a newly created resource in storage.
@@ -36,7 +49,30 @@ class GBVCenterController extends Controller
      */
     public function store(StoreGBVCenterRequest $request)
     {
-        //
+        try{
+            $input = $request->all();
+            $gbvCenter= new GBVCenter($input);
+            $gbvCenter->status="active";
+            if($gbvCenter->save()){
+                return response()
+                ->json(
+                    HelperClass::responeObject($gbvCenter, true, Response::HTTP_CREATED, 'GBV center created.', "A GBV center is created.", ""),
+                    Response::HTTP_CREATED
+                );
+            }else{
+                return response()
+                ->json(
+                    HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "",  "This GBV center couldnt be saved."),
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+           }catch (Exception $ex) { // Anything that went wrong
+               return response()
+                   ->json(
+                       HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                       Response::HTTP_UNPROCESSABLE_ENTITY
+                   );
+               }
     }
 
     /**

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Company;
 use App\Http\Requests\StoreCompanyRequest;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateCompanyRequest;
 
 class CompanyController extends Controller
@@ -15,18 +17,30 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $allCompany = Company::where('status', 'active')->get();
+            //->each(function($article, $key)){$article->media;};
+            return response()
+                ->json(
+                    HelperClass::responeObject(
+                        $allCompany,
+                        true,
+                        Response::HTTP_OK,
+                        'Successfully fetched.',
+                        "Company are fetched sucessfully.",
+                        ""
+                    ),
+                    Response::HTTP_OK
+                );
+        } catch (Exception $ex) {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+ 
 
     /**
      * Store a newly created resource in storage.
@@ -36,7 +50,30 @@ class CompanyController extends Controller
      */
     public function store(StoreCompanyRequest $request)
     {
-        //
+        try{
+            $input = $request->all();
+            $company= new Company($input);
+            $company->status="active";
+            if($company->save()){
+                return response()
+                ->json(
+                    HelperClass::responeObject($company, true, Response::HTTP_CREATED, 'Company created.', "A company is created.", ""),
+                    Response::HTTP_CREATED
+                );
+            }else{
+                return response()
+                ->json(
+                    HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "",  "This company couldnt be saved."),
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+           }catch (Exception $ex) { // Anything that went wrong
+               return response()
+                   ->json(
+                       HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                       Response::HTTP_UNPROCESSABLE_ENTITY
+                   );
+               }
     }
 
     /**
