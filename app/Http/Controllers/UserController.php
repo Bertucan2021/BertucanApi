@@ -4,15 +4,12 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response; 
 use App\Models\User;
-use App\Models\Address;
-use App\Models\Membership;
+use App\Models\Address; 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator; 
 use App\Http\Requests\StoreUserRequest;
 
 class UserController extends Controller

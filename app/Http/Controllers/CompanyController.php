@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Symfony\Component\HttpFoundation\Response;
 use App\Models\Company;
 use App\Http\Requests\StoreCompanyRequest;
-use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateCompanyRequest;
 
 class CompanyController extends Controller

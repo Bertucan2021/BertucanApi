@@ -34,6 +34,26 @@ Route::post('/memberships','MembershipController@store');
 Route::put('/memberships','MembershipController@update');
 Route::delete('/memberships','MembershipController@destroy');
  
+Route::get('/companies','CompanyController@index');
+Route::post('/companies','CompanyController@store');
+Route::put('/companies','CompanyController@update');
+Route::delete('/companies','CompanyController@destroy');
+
+Route::get('/ads','AdController@index');
+Route::post('/ads','AdController@store');
+Route::put('/ads','AdController@update');
+Route::delete('/ads','AdController@destroy');
+
+Route::get('/adTypes','AdTypeController@index');
+Route::post('/adTypes','AdTypeController@store');
+Route::put('/adTypes','AdTypeController@update');
+Route::delete('/adTypes','AdTypeController@destroy');
+
+Route::get('/gbvcenters','GBVCenterController@index');
+Route::post('/gbvcenters','GBVCenterController@store');
+Route::put('/gbvcenters','GBVCenterController@update');
+Route::delete('/gbvcenters','GBVCenterController@destroy');
+
 
 Route::post('/users/login', 'UserController@login');
 
