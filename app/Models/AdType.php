@@ -12,6 +12,7 @@ class AdType extends Model
         'type',
         'minimum_price',
         'current_no_ads',
+        'status'
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',

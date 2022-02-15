@@ -12,6 +12,7 @@ class Media extends Model
         'item_id',
         'url',
         'type',
+        'status'
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',

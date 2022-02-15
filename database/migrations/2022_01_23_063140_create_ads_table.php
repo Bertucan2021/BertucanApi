@@ -20,6 +20,7 @@ class CreateAdsTable extends Migration
             $table->bigInteger('ad_type')->nullable();
             $table->text('image')->nullable();
             $table->string('status', '20')->nullable();
+            $table->string('status', 20)->nullable();
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('ad_type')->references('id')->on('ad_types');
             

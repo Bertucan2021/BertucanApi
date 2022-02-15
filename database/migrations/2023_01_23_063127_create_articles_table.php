@@ -22,6 +22,7 @@ class CreateArticlesTable extends Migration
             $table->text('small_description')->nullable();
             $table->bigInteger('article_by')->nullable();
             $table->string('type', '255')->nullable();
+            $table->string('status', 20)->nullable();
             $table->foreign('article_by')->references('id')->on('users');
            
             $table->timestamps();

@@ -15,6 +15,7 @@ class CreateCycleHistoriesTable extends Migration
     {
         Schema::create('cycle_histories', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('status', 20)->nullable();
             $table->timestamps();
         });
     }

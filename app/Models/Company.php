@@ -13,7 +13,8 @@ class Company extends Model
         'description',
         'address_id',
         'membership_id',
-        'phone_number'
+        'phone_number',
+        'status'
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',

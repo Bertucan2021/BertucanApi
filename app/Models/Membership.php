@@ -12,7 +12,8 @@ class Membership extends Model
         'name',
         'type',
         'show_ad',
-        'add_per_minute',
-        'allowed_add_per_month'
+        'ad_per_minute',
+        'allowed_ad_per_month',
+        'status'
     ];
 }

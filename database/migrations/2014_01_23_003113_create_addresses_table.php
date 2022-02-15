@@ -21,6 +21,7 @@ class CreateAddressesTable extends Migration
             $table->double('longitude')->nullable(); 
             $table->string('type', 20)->nullable();
             $table->timestamps();
+            $table->string('status', 20)->nullable();
         });
     }
 

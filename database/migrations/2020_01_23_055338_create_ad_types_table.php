@@ -18,6 +18,7 @@ class CreateAdTypesTable extends Migration
             $table->text('type')->default('left_side')->nullable();
             $table->double('minimum_price')->nullable();
             $table->integer('registered_no_of_ads')->nullable();
+            $table->string('status', 20)->nullable();
             $table->timestamps();
         });
     }

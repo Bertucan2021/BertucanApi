@@ -14,7 +14,8 @@ class GBVCenter extends Model
         'phone_number',
         'address_id',
         'membership_id',
-        'license'
+        'license',
+        'status'
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',

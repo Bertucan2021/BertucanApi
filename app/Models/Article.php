@@ -16,6 +16,7 @@ class Article extends Model
         'small_description',
         'article_by',
         'type',
+        'status'
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',
