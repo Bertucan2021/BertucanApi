@@ -82,10 +82,10 @@ class CompanyController extends Controller
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function show(Company $company)
+    public function show( $id)
     {
         try {
-            $allCompany = Company::where('status', 'active')->where('id',$company->id)->get();
+            $allCompany = Company::where('status', 'active')->where('id',$id)->get();
             //->each(function($article, $key)){$article->media;};
             return response()
                 ->json(

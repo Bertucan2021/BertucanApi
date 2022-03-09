@@ -24,6 +24,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/users/logout', 'UserController@logout');
     Route::get('/users','UserController@index');
 });
+Route::get('/articles/{id}','ArticleController@show');
 Route::get('/articles','ArticleController@index');
 Route::post('/articles','ArticleController@store');
 Route::put('/articles','ArticleController@update');
