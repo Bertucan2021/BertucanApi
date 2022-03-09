@@ -51,6 +51,7 @@ Route::post('/adTypes','AdTypeController@store');
 Route::put('/adTypes','AdTypeController@update');
 Route::delete('/adTypes','AdTypeController@destroy');
 
+Route::get('/gbvcenters/{id}','GBVCenterController@show');
 Route::get('/gbvcenters','GBVCenterController@index');
 Route::post('/gbvcenters','GBVCenterController@store');
 Route::put('/gbvcenters','GBVCenterController@update');

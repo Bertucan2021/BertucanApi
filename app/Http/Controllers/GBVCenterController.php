@@ -81,9 +81,30 @@ class GBVCenterController extends Controller
      * @param  \App\Models\GBVCenter  $gBVCenter
      * @return \Illuminate\Http\Response
      */
-    public function show(GBVCenter $gBVCenter)
+    public function show( $id)
     {
-        //
+        try {
+            $allGBVCenter = GBVCenter::where('id', $id)->first();
+            //->each(function($article, $key)){$article->media;};
+            return response()
+                ->json(
+                    HelperClass::responeObject(
+                        $allGBVCenter,
+                        true,
+                        Response::HTTP_OK,
+                        'Successfully fetched.',
+                        "Active GBV center is fetched sucessfully.",
+                        ""
+                    ),
+                    Response::HTTP_OK
+                );
+        } catch (Exception $ex) {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
     }
 
     /**
