@@ -85,7 +85,7 @@ class CompanyController extends Controller
     public function show( $id)
     {
         try {
-            $allCompany = Company::where('status', 'active')->where('id',$id)->get();
+            $allCompany = Company::where('id',$id)->first();
             //->each(function($article, $key)){$article->media;};
             return response()
                 ->json(
@@ -94,7 +94,7 @@ class CompanyController extends Controller
                         true,
                         Response::HTTP_OK,
                         'Successfully fetched.',
-                        "Company are fetched sucessfully.",
+                        "Company is fetched sucessfully.",
                         ""
                     ),
                     Response::HTTP_OK

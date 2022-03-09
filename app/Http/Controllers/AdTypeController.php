@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AdDetail;
-use App\Http\Requests\StoreAdDetailRequest;
-use App\Http\Requests\UpdateAdDetailRequest;
+use App\Models\AdType;
+use App\Http\Requests\StoreAdTypeRequest;
+use App\Http\Requests\UpdateAdTypeRequest;
 
-class AdDetailController extends Controller
+class AdTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +31,10 @@ class AdDetailController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreAdDetailRequest  $request
+     * @param  \App\Http\Requests\StoreAdTypeRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAdDetailRequest $request)
+    public function store(StoreAdTypeRequest $request)
     {
         //
     }
@@ -42,10 +42,10 @@ class AdDetailController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\AdDetail  $adDetail
+     * @param  \App\Models\AdType  $adType
      * @return \Illuminate\Http\Response
      */
-    public function show(AdDetail $adDetail)
+    public function show(AdType $adType)
     {
         //
     }
@@ -53,10 +53,10 @@ class AdDetailController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\AdDetail  $adDetail
+     * @param  \App\Models\AdType  $adType
      * @return \Illuminate\Http\Response
      */
-    public function edit(AdDetail $adDetail)
+    public function edit(AdType $adType)
     {
         //
     }
@@ -64,11 +64,11 @@ class AdDetailController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateAdDetailRequest  $request
-     * @param  \App\Models\AdDetail  $adDetail
+     * @param  \App\Http\Requests\UpdateAdTypeRequest  $request
+     * @param  \App\Models\AdType  $adType
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAdDetailRequest $request, AdDetail $adDetail)
+    public function update(UpdateAdTypeRequest $request, AdType $adType)
     {
         //
     }
@@ -76,10 +76,10 @@ class AdDetailController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\AdDetail  $adDetail
+     * @param  \App\Models\AdType  $adType
      * @return \Illuminate\Http\Response
      */
-    public function destroy(AdDetail $adDetail)
+    public function destroy(AdType $adType)
     {
         //
     }

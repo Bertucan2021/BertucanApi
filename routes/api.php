@@ -35,6 +35,7 @@ Route::post('/memberships','MembershipController@store');
 Route::put('/memberships','MembershipController@update');
 Route::delete('/memberships','MembershipController@destroy');
  
+Route::get('/companies/{id}','CompanyController@show');
 Route::get('/companies','CompanyController@index');
 Route::post('/companies','CompanyController@store');
 Route::put('/companies','CompanyController@update');
