@@ -84,7 +84,28 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        //
+        try {
+            $allCompany = Company::where('status', 'active')->where('id',$company->id)->get();
+            //->each(function($article, $key)){$article->media;};
+            return response()
+                ->json(
+                    HelperClass::responeObject(
+                        $allCompany,
+                        true,
+                        Response::HTTP_OK,
+                        'Successfully fetched.',
+                        "Company are fetched sucessfully.",
+                        ""
+                    ),
+                    Response::HTTP_OK
+                );
+        } catch (Exception $ex) {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
     }
 
     /**
