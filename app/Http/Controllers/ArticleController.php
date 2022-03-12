@@ -20,7 +20,7 @@ class ArticleController extends Controller
     {
         try {
             $allArticle = Article::where('status', 'active')->get()->each(function ($item, $key) {               
-                $item->user;
+                $item->article_by;
             });
             //->each(function($article, $key)){$article->media;};
             return response()

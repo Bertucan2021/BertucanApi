@@ -23,6 +23,6 @@ class Article extends Model
     ];
     public function article_by()
     {
-        return $this->belongsTo(User::class,'article_by');
+        return $this->belongsTo(User::class,'article_by','id');
     }
 }
