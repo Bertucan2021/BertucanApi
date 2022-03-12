@@ -36,7 +36,7 @@ class User extends Authenticatable
  
     public function article()
     {
-        return $this->hasMany(Article::class,'article_by');
+        return $this->hasOne(Article::class,'article_by');
     }
     public function address()
     {
