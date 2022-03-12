@@ -94,7 +94,7 @@ class ArticleController extends Controller
     {
         try {
             $allArticle = Article::where('id', $id)->first();
-            $allArticle->article_by();
+            $allArticle->article_by;
             //->each(function($article, $key)){$article->media;};
             return response()
                 ->json(
@@ -102,7 +102,7 @@ class ArticleController extends Controller
                         $allArticle,
                         true,
                         Response::HTTP_OK,
-                        'Successfully fetched.',
+                        $allArticle->article_by,
                         "Article is fetched sucessfully.",
                         ""
                     ),
