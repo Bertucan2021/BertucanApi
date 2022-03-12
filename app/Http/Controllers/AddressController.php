@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Address;
 use App\Http\Requests\StoreAddressRequest;
 use App\Http\Requests\UpdateAddressRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use Exception;
+use Symfony\Component\HttpFoundation\Response;
 class AddressController extends Controller
 {
     /**
@@ -35,9 +38,33 @@ class AddressController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreAddressRequest $request)
-    {
-        //
-    }
+    { 
+            try {
+                 
+                $address = Address::create($request->all());
+                if ($address->save()) {
+                    return ($address)
+                        ->response()
+                        ->setStatusCode(Response::HTTP_CREATED);
+                } else {
+                    return (new $address)
+                        ->response()
+                        ->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            } catch (ModelNotFoundException $ex) { // User not found
+                return response()
+                    ->json(
+                        HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'The model doesnt exist.', "", $ex->getMessage()),
+                        Response::HTTP_UNPROCESSABLE_ENTITY
+                    );
+            } catch (Exception $ex) { // Anything that went wrong
+                return response()
+                    ->json(
+                        HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal error occured.', "", $ex->getMessage()),
+                        Response::HTTP_INTERNAL_SERVER_ERROR
+                    );
+            }
+        }
 
     /**
      * Display the specified resource.

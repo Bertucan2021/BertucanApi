@@ -30,6 +30,7 @@ Route::post('/articles','ArticleController@store');
 Route::put('/articles','ArticleController@update');
 Route::delete('/articles','ArticleController@destroy');
 
+Route::post('/addresses','AddressController@store');
 Route::get('/memberships','MembershipController@index');
 Route::post('/memberships','MembershipController@store');
 Route::put('/memberships','MembershipController@update');
