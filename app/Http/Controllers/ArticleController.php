@@ -19,7 +19,9 @@ class ArticleController extends Controller
     public function index()
     {
         try {
-            $allArticle = Article::where('status', 'active')->get();
+            $allArticle = Article::where('status', 'active')->get()->each(function ($item, $key) {               
+                $item->user;
+            });
             //->each(function($article, $key)){$article->media;};
             return response()
                 ->json(
@@ -92,6 +94,7 @@ class ArticleController extends Controller
     {
         try {
             $allArticle = Article::where('id', $id)->first();
+            $allArticle->user;
             //->each(function($article, $key)){$article->media;};
             return response()
                 ->json(

@@ -17,4 +17,13 @@ class Ad extends Model
     protected $casts = [
         'email_verified_at' => 'datetime',
     ]; 
+     public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+    public function adType()
+    {
+        return $this->belongsTo(AdType::class);
+    }
+    
 }
