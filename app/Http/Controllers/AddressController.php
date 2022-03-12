@@ -43,13 +43,31 @@ class AddressController extends Controller
                  
                 $address = Address::create($request->all());
                 if ($address->save()) {
-                    return ($address)
-                        ->response()
-                        ->setStatusCode(Response::HTTP_CREATED);
+                    return    response($address)
+                    ->json(
+                        HelperClass::responeObject(
+                            $address,
+                            true,
+                            Response::HTTP_OK,
+                            'Successfully fetched.',
+                            "Article are fetched sucessfully.",
+                            ""
+                        ),
+                        Response::HTTP_OK
+                    );
                 } else {
-                    return (new $address)
-                        ->response()
-                        ->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+                    return    response()
+                    ->json(
+                        HelperClass::responeObject(
+                            $address,
+                            true,
+                            Response::HTTP_OK,
+                            'Not Successfully fetched.',
+                            "no are fetched sucessfully.",
+                            ""
+                        ),
+                        Response::HTTP_OK
+                    );
                 }
             } catch (ModelNotFoundException $ex) { // User not found
                 return response()
