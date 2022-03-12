@@ -56,7 +56,7 @@ class AddressController extends Controller
                         Response::HTTP_OK
                     );
                 } else {
-                    return    response()
+                    return ( response()
                     ->json(
                         HelperClass::responeObject(
                             $address,
