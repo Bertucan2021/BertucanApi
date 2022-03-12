@@ -94,7 +94,7 @@ class ArticleController extends Controller
     {
         try {
             $allArticle = Article::where('id', $id)->first();
-            $allArticle->user;
+            $allArticle->article_by;
             //->each(function($article, $key)){$article->media;};
             return response()
                 ->json(
