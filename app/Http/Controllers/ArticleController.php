@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Request;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Article;
@@ -43,7 +43,7 @@ class ArticleController extends Controller
                 );
         }
     }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -52,8 +52,9 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        try {
+        try {            
             $input = $request->all();
+
             $article= new Article($input);
             $article->status="active";
             if($article->save()){

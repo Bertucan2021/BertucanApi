@@ -17,6 +17,18 @@ class HelperClass
     {
         return $fileToBeUploaded->move($location, $filename);
     }
+    public function imageUpload(Request $request){
+        $file=$request->file('file');
+        $fileName=$file->getClientOriginalName();
+        $finalName= date('His') . $fileName;
+        $request->file('file')->storeAs('file/',$finalName,'public');
+        return response()
+                    ->json(
+                        HelperClass::responeObject($finalName, true, Response::HTTP_CREATED, "Validation failed check JSON request", "WORKED","WORKED"),
+                        Response::HTTP_CREATED
+                    );
+    }
+    
      public static function responeObject($data,$success,$status,$title,$message,$error){
          return [
             'data' => $data,

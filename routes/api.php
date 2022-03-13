@@ -23,7 +23,7 @@ Route::post('/users','UserController@store');
 Route::middleware('auth:api')->group(function () {    
     Route::post('/users/logout', 'UserController@logout');
     Route::get('/users','UserController@index');
-});
+}); 
 Route::get('/articles/{id}','ArticleController@show');
 Route::get('/articles','ArticleController@index');
 Route::post('/articles','ArticleController@store');
@@ -58,6 +58,7 @@ Route::post('/gbvcenters','GBVCenterController@store');
 Route::put('/gbvcenters','GBVCenterController@update');
 Route::delete('/gbvcenters','GBVCenterController@destroy');
 
+Route::post('/media','MediaController@store');
 
 Route::post('/users/login', 'UserController@login');
 

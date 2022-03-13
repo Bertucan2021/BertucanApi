@@ -56,7 +56,7 @@ class AddressController extends Controller
                         Response::HTTP_OK
                     );
                 } else {
-                    return ( response()
+                    return response()
                     ->json(
                         HelperClass::responeObject(
                             $address,
@@ -69,6 +69,7 @@ class AddressController extends Controller
                         Response::HTTP_OK
                     );
                 }
+                    
             } catch (ModelNotFoundException $ex) { // User not found
                 return response()
                     ->json(
