@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\GBVCenter;
+use App\Models\Address;
 use App\Http\Requests\StoreGBVCenterRequest;
 use App\Http\Requests\UpdateGBVCenterRequest;
 
@@ -18,11 +19,9 @@ class GBVCenterController extends Controller
     public function index()
     {
         try {
-            $allGBVCenter = GBVCenter::where('status', 'active')->get()
-            ->each(function($item, $key)){
-                $item->address;
-            
-            };
+            $allGBVCenter = GBVCenter::where('status', 'active')->get()->each( function ($item, $key){
+                $item->address;          
+            });
             return response()
                 ->json(
                     HelperClass::responeObject(
@@ -57,6 +56,17 @@ class GBVCenterController extends Controller
             $gbvCenter= new GBVCenter($input);
             $gbvCenter->status="active";
             if($gbvCenter->save()){
+                $address = $request->address;
+                $address = new Address($address);
+                $address->type='gbv';
+                if (!$address->save()) {
+                    return  response()
+                    ->json(
+                        HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, "GBV saved but Address couldn't be saved.", "",  "GBV saved but Address couldn't be saved"),
+                        Response::HTTP_INTERNAL_SERVER_ERROR
+                    );
+                }
+
                 return response()
                 ->json(
                     HelperClass::responeObject($gbvCenter, true, Response::HTTP_CREATED, 'GBV center created.', "A GBV center is created.", ""),
@@ -88,7 +98,7 @@ class GBVCenterController extends Controller
     {
         try {
             $allGBVCenter = GBVCenter::where('id', $id)->first();
-            //->each(function($article, $key)){$article->media;};
+            $allGBVCenter->address; 
             return response()
                 ->json(
                     HelperClass::responeObject(
@@ -110,16 +120,6 @@ class GBVCenterController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\GBVCenter  $gBVCenter
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(GBVCenter $gBVCenter)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
