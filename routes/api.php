@@ -58,6 +58,9 @@ Route::post('/gbvcenters','GBVCenterController@store');
 Route::put('/gbvcenters','GBVCenterController@update');
 Route::delete('/gbvcenters','GBVCenterController@destroy');
 
+
+Route::post('/reports','ReportController@store');
+
 Route::post('/media','MediaController@store');
 
 Route::post('/users/login', 'UserController@login');
