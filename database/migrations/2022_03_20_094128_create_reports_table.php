@@ -18,9 +18,9 @@ class CreateReportsTable extends Migration
             $table->text('message');
             $table->text('abuse_type')->nullable();
             $table->bigInteger('address_id')->unsigned()->nullable(); 
-            $table->text('reported_by')->nullable(); 
+            $table->bigInteger('user_id')->nullable(); 
             $table->string('status', 20)->nullable(); 
-            $table->foreign('reported_by')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('address_id')->references('id')->on('addresses');
             $table->timestamps();
         });
