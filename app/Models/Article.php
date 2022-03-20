@@ -25,4 +25,8 @@ class Article extends Model
     {
         return $this->belongsTo(User::class,'article_by','id');
     }
+    public function media()
+    {
+        return $this->hasMany(Media::class,'item_id');
+    }
 }

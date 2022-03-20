@@ -28,4 +28,8 @@ class GbvCenter extends Model
     {
         return $this->belongsTo(Membership::class);
     }
+    public function media()
+    {
+        return $this->hasMany(Media::class,'item_id');
+    }
 }

@@ -18,8 +18,11 @@ class GBVCenterController extends Controller
     public function index()
     {
         try {
-            $allGBVCenter = GBVCenter::where('status', 'active')->get();
-            //->each(function($article, $key)){$article->media;};
+            $allGBVCenter = GBVCenter::where('status', 'active')->get()
+            ->each(function($item, $key)){
+                $item->address;
+            
+            };
             return response()
                 ->json(
                     HelperClass::responeObject(
