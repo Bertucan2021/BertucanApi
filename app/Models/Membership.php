@@ -16,4 +16,16 @@ class Membership extends Model
         'allowed_ad_per_month',
         'status'
     ];
+    public function user()
+    {
+        return $this->hasOne(User::class,'membership_id');
+    }
+    public function company()
+    {
+        return $this->hasOne(Company::class,'membership_id');
+    }
+    public function gbvcenter()
+    {
+        return $this->hasOne(GBVCenter::class,'membership_id');
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Request;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Article;
@@ -19,7 +19,9 @@ class ArticleController extends Controller
     public function index()
     {
         try {
-            $allArticle = Article::where('status', 'active')->get();
+            $allArticle = Article::where('status', 'active')->get()->each(function ($item, $key) {               
+                $item->article_by;
+            });
             //->each(function($article, $key)){$article->media;};
             return response()
                 ->json(
@@ -41,7 +43,7 @@ class ArticleController extends Controller
                 );
         }
     }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -50,8 +52,9 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        try {
+        try {            
             $input = $request->all();
+
             $article= new Article($input);
             $article->status="active";
             if($article->save()){
@@ -88,9 +91,31 @@ class ArticleController extends Controller
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $article)
+    public function show( $id)
     {
-        //
+        try {
+            $allArticle = Article::where('id', $id)->first();
+            $allArticle->user;
+            //->each(function($article, $key)){$article->media;};
+            return response()
+                ->json(
+                    HelperClass::responeObject(
+                        $allArticle,
+                        true,
+                        Response::HTTP_OK,
+                        'Successfully fetched.',
+                        "Article is fetched sucessfully.",
+                        ""
+                    ),
+                    Response::HTTP_OK
+                );
+        } catch (Exception $ex) {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
     }
 
 

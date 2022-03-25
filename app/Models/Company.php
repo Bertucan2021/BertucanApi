@@ -19,4 +19,16 @@ class Company extends Model
     protected $casts = [
         'email_verified_at' => 'datetime',
     ]; 
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
+    public function membership()
+    {
+        return $this->belongsTo(Membership::class);
+    }
+    public function media()
+    {
+        return $this->hasMany(Media::class,'item_id');
+    }
 }

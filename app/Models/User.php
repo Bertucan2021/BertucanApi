@@ -34,5 +34,20 @@ class User extends Authenticatable
         
     ];
  
-    
+    public function article()
+    {
+        return $this->hasOne(Article::class,'article_by');
+    }
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
+    public function membership()
+    {
+        return $this->belongsTo(Membership::class);
+    }
+    public function media()
+    {
+        return $this->hasMany(Media::class,'item_id');
+    }
 }

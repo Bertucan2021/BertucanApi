@@ -23,17 +23,20 @@ Route::post('/users','UserController@store');
 Route::middleware('auth:api')->group(function () {    
     Route::post('/users/logout', 'UserController@logout');
     Route::get('/users','UserController@index');
-});
+}); 
+Route::get('/articles/{id}','ArticleController@show');
 Route::get('/articles','ArticleController@index');
 Route::post('/articles','ArticleController@store');
 Route::put('/articles','ArticleController@update');
 Route::delete('/articles','ArticleController@destroy');
 
+Route::post('/addresses','AddressController@store');
 Route::get('/memberships','MembershipController@index');
 Route::post('/memberships','MembershipController@store');
 Route::put('/memberships','MembershipController@update');
 Route::delete('/memberships','MembershipController@destroy');
  
+Route::get('/companies/{id}','CompanyController@show');
 Route::get('/companies','CompanyController@index');
 Route::post('/companies','CompanyController@store');
 Route::put('/companies','CompanyController@update');
@@ -49,11 +52,16 @@ Route::post('/adTypes','AdTypeController@store');
 Route::put('/adTypes','AdTypeController@update');
 Route::delete('/adTypes','AdTypeController@destroy');
 
+Route::get('/gbvcenters/{id}','GBVCenterController@show');
 Route::get('/gbvcenters','GBVCenterController@index');
 Route::post('/gbvcenters','GBVCenterController@store');
 Route::put('/gbvcenters','GBVCenterController@update');
 Route::delete('/gbvcenters','GBVCenterController@destroy');
 
+
+Route::post('/reports','ReportController@store');
+
+Route::post('/media','MediaController@store');
 
 Route::post('/users/login', 'UserController@login');
 
