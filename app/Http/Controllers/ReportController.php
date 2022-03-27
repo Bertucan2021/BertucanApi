@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
+use App\Models\AbuseType;
 use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateReportRequest;
 use Exception;
@@ -31,19 +32,28 @@ class ReportController extends Controller
     {
         try{
             $input = $request->all();
+            $abuseType = AbuseType::where('id', $request->abuse_type_id)->first(); 
+            if(!$abuseType){
+                return response()
+                ->json(
+                    HelperClass::responeObject(null, false, Response::HTTP_CONFLICT, 'Abuse Type does not exist.', "",  "An abuse type does not exist by this id."),
+                    Response::HTTP_CONFLICT
+                );
+            }
             $report= new Report($input);
+            
             $report->status="active";
             if($report->save()){
-                $address = $request->address;
-                $address = new Address($address);
-                $address->type='report';
-                if (!$address->save()) {
-                    return  response()
-                    ->json(
-                        HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, "Report saved but Address couldn't be saved.", "",  "Report saved but Address couldn't be saved"),
-                        Response::HTTP_INTERNAL_SERVER_ERROR
-                    );
-                }
+                // $address = $request->address;
+                // $address = new Address($address);
+                // $address->type='report';
+                // if (!$address->save()) {
+                //     return  response()
+                //     ->json(
+                //         HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, "Report saved but Address couldn't be saved.", "",  "Report saved but Address couldn't be saved"),
+                //         Response::HTTP_INTERNAL_SERVER_ERROR
+                //     );
+                // }
                 return response()
                 ->json(
                     HelperClass::responeObject($report, true, Response::HTTP_CREATED, 'Report created.', "Report is created.", ""),

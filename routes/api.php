@@ -65,6 +65,9 @@ Route::post('/media','MediaController@store');
 
 Route::post('/users/login', 'UserController@login');
 
+Route::get('/abuseTypes','AbuseTypeController@index');
+Route::post('/abuseTypes','AbuseTypeController@store');
+
 Route::middleware(['cors'])->group(function () {
     
 });
