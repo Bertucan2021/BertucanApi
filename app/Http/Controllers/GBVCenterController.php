@@ -53,12 +53,24 @@ class GBVCenterController extends Controller
     {
         try{
             $input = $request->all();
+            $fileExist=false;
+            if($request->hasFile('file')!=null){
+                $fileExist=true;
+            $file=$request->file('file');
+                    $fileName=$file->getClientOriginalName();
+                    $finalName= date('His') . $fileName;
+                    $request->file('file')->storeAs('gbv/',$finalName,'public');
+            }
+            
             $gbvCenter= new GBVCenter($input);
+            if($fileExist){ 
+                    $gbvCenter->logo="gbv/".$finalName;
+            }
             $gbvCenter->status="active";
             if($gbvCenter->save()){
                 $address = $request->address;
                 $address = new Address($address);
-                $address->type='gbv';
+                //$address->type='gbv';
                 if (!$address->save()) {
                     return  response()
                     ->json(

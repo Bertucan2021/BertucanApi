@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateReportRequest;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Address;
+use App\Models\Media;
 
 class ReportController extends Controller
 {
@@ -19,7 +20,30 @@ class ReportController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $allReport = Report::where('status', 'active')->get()->each(function ($item, $key) {               
+                $item->media;
+            });
+            //->each(function($article, $key)){$article->media;};
+            return response()
+                ->json(
+                    HelperClass::responeObject(
+                        $allReport,
+                        true,
+                        Response::HTTP_OK,
+                        'Successfully fetched.',
+                        "Report are fetched sucessfully.",
+                        ""
+                    ),
+                    Response::HTTP_OK
+                );
+        } catch (Exception $ex) {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
     }
 
     /**
@@ -32,7 +56,15 @@ class ReportController extends Controller
     {
         try{
             $input = $request->all();
-            $abuseType = AbuseType::where('id', $request->abuse_type_id)->first(); 
+            $fileExist=false;
+            if($request->hasFile('file')!=null){
+                $fileExist=true;
+                $file=$request->file('file');
+                $fileName=$file->getClientOriginalName();
+                $finalName= date('His') . $fileName;
+                $request->file('file')->storeAs('report/',$finalName,'public');
+            }
+            $abuseType = AbuseType::where('id', $request->abuse_types_id)->first(); 
             if(!$abuseType){
                 return response()
                 ->json(
@@ -54,6 +86,18 @@ class ReportController extends Controller
                 //         Response::HTTP_INTERNAL_SERVER_ERROR
                 //     );
                 // }
+                if($fileExist){
+                    $media= new Media();
+                    $media->url="report/".$finalName;
+                    $media->type='report';
+                    $media->item_id=$report->id;
+                    if(!$media->save()){                        
+                        return response()
+                        ->json(
+                            HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "",  "This media couldnt be saved."),
+                            Response::HTTP_INTERNAL_SERVER_ERROR
+                        );
+                    }
                 return response()
                 ->json(
                     HelperClass::responeObject($report, true, Response::HTTP_CREATED, 'Report created.', "Report is created.", ""),
@@ -65,6 +109,7 @@ class ReportController extends Controller
                     HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "",  "This report couldnt be saved."),
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
+            }
             }
            }catch (Exception $ex) { // Anything that went wrong
                return response()

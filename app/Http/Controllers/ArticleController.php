@@ -20,7 +20,7 @@ class ArticleController extends Controller
     {
         try {
             $allArticle = Article::where('status', 'active')->get()->each(function ($item, $key) {               
-                $item->article_by;
+                $item->user;
             });
             //->each(function($article, $key)){$article->media;};
             return response()
@@ -54,9 +54,19 @@ class ArticleController extends Controller
     {
         try {            
             $input = $request->all();
-
+$fileExist=false;
+            if($request->hasFile('file')!=null){
+                $fileExist=true;
+            $file=$request->file('file');
+                    $fileName=$file->getClientOriginalName();
+                    $finalName= date('His') . $fileName;
+                    $request->file('file')->storeAs('article/',$finalName,'public');
+            }
             $article= new Article($input);
             $article->status="active";
+            if($fileExist){ 
+                    $article->icon="article/".$finalName;
+            }
             if($article->save()){
                 return response()
                 ->json(

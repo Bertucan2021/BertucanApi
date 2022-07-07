@@ -53,9 +53,7 @@ class UserController extends Controller
                 );
         }
     }
-public function checkLogin(){
-    
-}
+
     public function login(Request $request)
     {
         try {
@@ -72,8 +70,11 @@ public function checkLogin(){
             }
             $user = User::where('email', $request->email)->first();
             if ($user) {
+                 $line="73";
                 if (Hash::check($request->password, $user->password)) {
+                     $line="75";
                     $token = $user->createToken('Laravel Password Grant', [$user->role])->accessToken;
+                     $line="77";
                     $user['remember_token'] = $token;
                     if ($user->save()) {
                         $user->address;
@@ -112,7 +113,7 @@ public function checkLogin(){
         } catch (Exception $ex) { // Anything that went wrong
             return response()
                 ->json(
-                    HelperClass::responeObject(null, false, RESPONSE::HTTP_INTERNAL_SERVER_ERROR, 'Internal server error.', "", $ex->getMessage()),
+                    HelperClass::responeObject($line, false, RESPONSE::HTTP_INTERNAL_SERVER_ERROR, 'Internal server error.', "", $ex->getMessage()),
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
         }
