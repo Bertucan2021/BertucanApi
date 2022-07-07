@@ -50,7 +50,9 @@ class UserController extends Controller
                 );
         }
     }
-
+public function checkLogin(){
+    
+}
     public function login(Request $request)
     {
         try {
