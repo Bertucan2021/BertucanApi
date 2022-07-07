@@ -5,21 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CycleHistory extends Model
+class SymptomLog extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'start_date',
-        'end_date',
-        'notes',
-        'changes',
-        'user_id'
+        'symptom_description',
+        'symptom_type_id'
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',
     ]; 
-    public function user()
+    public function symptomType()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(SymptomType::class);
     }
 }

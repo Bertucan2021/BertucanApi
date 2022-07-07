@@ -50,4 +50,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Media::class,'item_id');
     }
+    public function cycleHistory()
+    {
+        return $this->hasOne(CycleHistory::class,'user_id');
+    }
+    public function logInfo()
+    {
+        return $this->hasOne(LogInfo::class,'user_id');
+    }
+    public function userSymptomLog()
+    {
+        return $this->hasOne(UserSymptomLog::class,'user_id');
+    }
 }
