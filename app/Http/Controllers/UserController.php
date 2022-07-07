@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator; 
 use App\Http\Requests\StoreUserRequest;
+use App\Models\Media;
+
+use function PHPUnit\Framework\fileExists;
 
 class UserController extends Controller
 {
@@ -153,17 +156,25 @@ public function checkLogin(){
     {
         try {
             $input = $request->all();
-            $user = User::where('email', $request->email)->first();
+            $fileExist=false;
+            if($request->hasFile('file')!=null){
+                $fileExist=true;
+            $file=$request->file('file');
+                    $fileName=$file->getClientOriginalName();
+                    $finalName= date('His') . $fileName;
+                    $request->file('file')->storeAs('profilepic/',$finalName,'public');
+            }
+            $user = User::where('email', $request->email)->first(); 
             if (!$user) {
-                $user = User::where('phone_number', $request->phone_number)->first();
+                $user = User::where('phone_number', $request->phone_number)->first(); 
                 if ($user) {
                     return response()
                         ->json(
                             HelperClass::responeObject(null, false, Response::HTTP_CONFLICT, 'User already exist.', "",  "A user already exist by this phonenumber "),
                             Response::HTTP_CONFLICT
                         );
-                } 
-                $user = new User($input);
+                }  
+                $user = new User($input); 
                 $user->password = Hash::make($request->password);
                 $user->role = "user";
                 $user->remember_token  = $user->createToken('Laravel Password Grant', [$user->role])->accessToken;
@@ -172,9 +183,26 @@ public function checkLogin(){
                     $address = Address::create($address);
                     $user->address_id = $address->id;
                 }
-                //$user->status = "active";
+                if($fileExist){ 
+                    $user->profile_picture="profilepic/".$finalName;
+                }
+                //$user->status = "active"; 
                 if ($user->save()) {
                     $user->address;
+                    if($fileExist){
+                    $media= new Media();
+                    $media->url="profilepic/".$finalName;
+                    $media->type='user';
+                    $media->item_id=$user->id;
+                    if(!$media->save()){                        
+                        return response()
+                        ->json(
+                            HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "",  "This media couldnt be saved."),
+                            Response::HTTP_INTERNAL_SERVER_ERROR
+                        );
+                    }
+                }
+
                     return response()
                         ->json(
                             HelperClass::responeObject($user, true, Response::HTTP_CREATED, 'User created.', "A user is created.", ""),
