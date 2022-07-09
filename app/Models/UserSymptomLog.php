@@ -10,7 +10,8 @@ class UserSymptomLog extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
-        'symptom_log'
+        'symptom_log_id',
+        'status'
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',

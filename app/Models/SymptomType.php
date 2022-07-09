@@ -10,7 +10,8 @@ class SymptomType extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'status'
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',

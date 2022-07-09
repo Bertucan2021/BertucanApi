@@ -12,7 +12,8 @@ class LogInfo extends Model
         'is_registered',
         'is_logged',
         'token',
-        'user_id'
+        'user_id',
+        'status'
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',
