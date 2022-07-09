@@ -20,12 +20,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::post('/users','UserController@store');
-Route::middleware('auth:api')->group(function () {    
+Route::middleware(['auth:api','scope:user'])->group(function () {    
     Route::post('/users/logout', 'UserController@logout');
-    Route::get('/users','UserController@index');
+    Route::get('/users','UserController@index');    
+Route::get('/articles','ArticleController@index');
 }); 
 Route::get('/articles/{id}','ArticleController@show');
-Route::get('/articles','ArticleController@index');
 Route::post('/articles','ArticleController@store');
 Route::put('/articles','ArticleController@update');
 Route::delete('/articles','ArticleController@destroy');
