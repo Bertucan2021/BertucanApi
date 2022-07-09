@@ -31,6 +31,8 @@ class AuthServiceProvider extends ServiceProvider
             'admin' => 'Access admin endpoint',
             'organization' => 'Access organization endpoint',
         ]);
-         
+        Passport::setDefaultScope([
+            'user'
+        ]);
     }
 }
