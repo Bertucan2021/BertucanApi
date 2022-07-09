@@ -34,7 +34,7 @@ class LogInfoController extends Controller
                         true,
                         Response::HTTP_OK,
                         'Successfully fetched.',
-                        "$this->ModelName are fetched sucessfully.",
+                        "$this->modelName are fetched sucessfully.",
                         ""
                     ),
                     Response::HTTP_OK
