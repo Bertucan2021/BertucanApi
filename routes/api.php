@@ -24,7 +24,7 @@ Route::middleware(['auth:api','scope:user'])->group(function () {
     Route::get('/users','UserController@index');    
 Route::get('/articles','ArticleController@index');
 }); 
-Route::middleware(['auth:api','scope:user,admin,organization'])->group(function () {    
+Route::group(['middleware' => ['auth:api','scope:user,admin,organization']], function () {    
     Route::post('/users/logout', 'UserController@logout');
 }); 
 Route::get('/articles/{id}','ArticleController@show');
