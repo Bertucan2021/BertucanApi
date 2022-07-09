@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,7 @@ class ArticleController extends Controller
     public function index()
     {
         try {
-            $allArticle = Article::where('status', 'active')->get()->each(function ($item, $key) {               
+            $allArticle = Article::where('status', 'active')->get()->each(function ($item, $key) {
                 $item->user;
             });
             //->each(function($article, $key)){$article->media;};
@@ -43,7 +44,7 @@ class ArticleController extends Controller
                 );
         }
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -52,33 +53,33 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        try {            
+        try {
             $input = $request->all();
-$fileExist=false;
-            if($request->hasFile('file')!=null){
-                $fileExist=true;
-            $file=$request->file('file');
-                    $fileName=$file->getClientOriginalName();
-                    $finalName= date('His') . $fileName;
-                    $request->file('file')->storeAs('article/',$finalName,'public');
+            $fileExist = false;
+            if ($request->hasFile('file') != null) {
+                $fileExist = true;
+                $file = $request->file('file');
+                $fileName = $file->getClientOriginalName();
+                $finalName = date('His') . $fileName;
+                $request->file('file')->storeAs('article/', $finalName, 'public');
             }
-            $article= new Article($input);
-            $article->status="active";
-            if($fileExist){ 
-                    $article->icon="article/".$finalName;
+            $article = new Article($input);
+            $article->status = "active";
+            if ($fileExist) {
+                $article->icon = "article/" . $finalName;
             }
-            if($article->save()){
+            if ($article->save()) {
                 return response()
-                ->json(
-                    HelperClass::responeObject($article, true, Response::HTTP_CREATED, 'Article created.', "An article is created.", ""),
-                    Response::HTTP_CREATED
-                );
-            }else{
+                    ->json(
+                        HelperClass::responeObject($article, true, Response::HTTP_CREATED, 'Article created.', "An article is created.", ""),
+                        Response::HTTP_CREATED
+                    );
+            } else {
                 return response()
-                ->json(
-                    HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "",  "This article couldnt be saved."),
-                    Response::HTTP_INTERNAL_SERVER_ERROR
-                );
+                    ->json(
+                        HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "",  "This article couldnt be saved."),
+                        Response::HTTP_INTERNAL_SERVER_ERROR
+                    );
             }
         } catch (ModelNotFoundException $ex) { // User not found
             return response()
@@ -101,7 +102,7 @@ $fileExist=false;
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function show( $id)
+    public function show($id)
     {
         try {
             $allArticle = Article::where('id', $id)->first();

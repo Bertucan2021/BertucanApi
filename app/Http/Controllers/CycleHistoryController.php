@@ -5,9 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\CycleHistory;
 use App\Http\Requests\StoreCycleHistoryRequest;
 use App\Http\Requests\UpdateCycleHistoryRequest;
+use Exception;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Models\User;
+use App\Models\Address;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreUserRequest;
+use App\Models\Media;
+
 
 class CycleHistoryController extends Controller
 {
+    private $modelName="Cycle history";
     /**
      * Display a listing of the resource.
      *
@@ -15,17 +27,37 @@ class CycleHistoryController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        try {
+            $user = CycleHistory::where('status', '!=', 'deleted')
+                ->orWhereNull('status')->get()
+                ->each(function ($item, $key) {
+                    $item->user;
+                });
+            return response()
+                ->json(
+                    HelperClass::responeObject(
+                        $user,
+                        true,
+                        Response::HTTP_OK,
+                        'Successfully fetched.',
+                        "Cycle histories are fetched sucessfully.",
+                        ""
+                    ),
+                    Response::HTTP_OK
+                );
+        } catch (ModelNotFoundException $ex) { // User not found
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'The model doesnt exist.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        } catch (Exception $ex) { // Anything that went wrong
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
     }
 
     /**
@@ -36,7 +68,45 @@ class CycleHistoryController extends Controller
      */
     public function store(StoreCycleHistoryRequest $request)
     {
-        //
+        try {
+            $input = $request->all();
+            $user = $request->user();
+            $fetchedUser = User::where('id',$user->id)->first();
+            if (!$fetchedUser) {
+                return response()
+                ->json(
+                    HelperClass::responeObject(null, true, Response::HTTP_CREATED, "$this->modelName does not exist.", "$this->modelName must exist for $this->modelName to be recorded", ""),
+                    Response::HTTP_NOT_FOUND
+                );
+            }
+            $cycleHistory= new CycleHistory($input);
+            $cycleHistory->status="active";
+            if ($cycleHistory->save()) {
+                return response()
+                    ->json(
+                        HelperClass::responeObject($cycleHistory, true, Response::HTTP_CREATED, "$this->modelName is created.", "A $this->modelName is created.", ""),
+                        Response::HTTP_CREATED
+                    );
+            } else {
+                return response()
+                    ->json(
+                        HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "",  "This $this->modelName couldnt be saved."),
+                        Response::HTTP_INTERNAL_SERVER_ERROR
+                    );
+            }
+        } catch (ModelNotFoundException $ex) { // User not found
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, "The $this->modelName doesnt exist.", "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        } catch (Exception $ex) {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
     }
 
     /**
@@ -45,9 +115,30 @@ class CycleHistoryController extends Controller
      * @param  \App\Models\CycleHistory  $cycleHistory
      * @return \Illuminate\Http\Response
      */
-    public function show(CycleHistory $cycleHistory)
+    public function show($id)
     {
-        //
+        try {
+            $allCycleHistories = CycleHistory::where('id', $id)->first();
+            $allCycleHistories->user; 
+            return response()
+                ->json(
+                    HelperClass::responeObject(
+                        $allCycleHistories,
+                        true,
+                        Response::HTTP_OK,
+                        'Successfully fetched.',
+                        "$this->modelName is fetched sucessfully.",
+                        ""
+                    ),
+                    Response::HTTP_OK
+                );
+        } catch (Exception $ex) {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
     }
 
     /**
@@ -55,11 +146,7 @@ class CycleHistoryController extends Controller
      *
      * @param  \App\Models\CycleHistory  $cycleHistory
      * @return \Illuminate\Http\Response
-     */
-    public function edit(CycleHistory $cycleHistory)
-    {
-        //
-    }
+     */ 
 
     /**
      * Update the specified resource in storage.
@@ -79,8 +166,38 @@ class CycleHistoryController extends Controller
      * @param  \App\Models\CycleHistory  $cycleHistory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CycleHistory $cycleHistory)
+    public function destroy(CycleHistory $cycleHistoryRequest)
     {
-        //
+        try {
+            $user = $cycleHistoryRequest->user();
+            $cycleHistoryValue = $cycleHistoryRequest->all();
+            $cycleHistory= CycleHistory::where('id',$cycleHistoryRequest->id)->first();
+            if (!$cycleHistory) {
+                response()
+                    ->json(
+                        HelperClass::responeObject(null, false, Response::HTTP_NOT_FOUND, "Resource Not Found", '', "$this->modelName by this id doesnt exist."),
+                        Response::HTTP_NOT_FOUND
+                    );
+            }
+            $cycleHistory->status = 'deleted';
+            $cycleHistory->save();
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, true, Response::HTTP_OK, 'Successfully deleted.', "$this->modelName is deleted sucessfully.", ""),
+                    Response::HTTP_OK
+                );
+        } catch (ModelNotFoundException $ex) {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'The model doesnt exist.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        } catch (Exception $ex) { // Anything that went wrong
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal error occured.', "", $ex->getMessage()),
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+        }
     }
 }
