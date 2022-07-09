@@ -5,16 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\CycleHistory;
 use App\Http\Requests\StoreCycleHistoryRequest;
 use App\Http\Requests\UpdateCycleHistoryRequest;
-use Exception;
-use Illuminate\Http\Request;
+use Exception; 
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\User;
-use App\Models\Address;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\StoreUserRequest;
-use App\Models\Media;
+use App\Models\User; 
+use Illuminate\Database\Eloquent\ModelNotFoundException; 
 
 
 class CycleHistoryController extends Controller
@@ -28,7 +22,7 @@ class CycleHistoryController extends Controller
     public function index()
     {
         try {
-            $user = CycleHistory::where('status', '!=', 'deleted')
+            $cycleHistories = CycleHistory::where('status', '!=', 'deleted')
                 ->orWhereNull('status')->get()
                 ->each(function ($item, $key) {
                     $item->user;
@@ -36,11 +30,11 @@ class CycleHistoryController extends Controller
             return response()
                 ->json(
                     HelperClass::responeObject(
-                        $user,
+                        $cycleHistories,
                         true,
                         Response::HTTP_OK,
                         'Successfully fetched.',
-                        "Cycle histories are fetched sucessfully.",
+                        "$this->ModelName are fetched sucessfully.",
                         ""
                     ),
                     Response::HTTP_OK

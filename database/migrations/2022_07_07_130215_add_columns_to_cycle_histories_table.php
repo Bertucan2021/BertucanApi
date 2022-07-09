@@ -15,9 +15,10 @@ class AddColumnsToCycleHistoriesTable extends Migration
     {
         Schema::table('cycle_histories', function (Blueprint $table) {
            
-            $table->string('is_registered',3)->nullable(); 
-            $table->string('is_logged', 3)->nullable(); 
-            $table->text('token')->nullable();   
+            $table->date('start_date',3)->nullable(); 
+            $table->date('end_date', 3)->nullable(); 
+            $table->text('notes')->nullable();   
+            $table->text('changes')->nullable(); 
             $table->bigInteger('user_id')->nullable();  
             $table->foreign('user_id')->references('id')->on('users');
          
