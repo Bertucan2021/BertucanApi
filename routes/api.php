@@ -20,8 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::post('/users','UserController@store');
-Route::middleware(['auth:api','scope:user'])->group(function () {    
-    Route::post('/users/logout', 'UserController@logout');
+Route::middleware(['auth:api','scope:user'])->group(function () {   
     Route::get('/users','UserController@index');    
 Route::get('/articles','ArticleController@index');
 }); 

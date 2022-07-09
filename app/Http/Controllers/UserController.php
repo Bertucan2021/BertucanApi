@@ -113,7 +113,7 @@ class UserController extends Controller
         } catch (Exception $ex) { // Anything that went wrong
             return response()
                 ->json(
-                    HelperClass::responeObject($line, false, RESPONSE::HTTP_INTERNAL_SERVER_ERROR, 'Internal server error.', "", $ex->getMessage()),
+                    HelperClass::responeObject("There is some error.", false, RESPONSE::HTTP_INTERNAL_SERVER_ERROR, 'Internal server error.', "", $ex->getMessage()),
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
         }
