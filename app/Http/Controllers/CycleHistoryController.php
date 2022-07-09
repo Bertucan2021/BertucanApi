@@ -80,6 +80,7 @@ class CycleHistoryController extends Controller
                 );
             }
             $cycleHistory= new CycleHistory($input);
+            $cycleHistory->user_id=$user->id;
             $cycleHistory->status="active";
             if ($cycleHistory->save()) {
                 return response()
