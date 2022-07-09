@@ -20,15 +20,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::post('/users', 'UserController@store');
-Route::middleware(['auth:api', 'scope:user'])->middleware('bindings')->group(function () {
+Route::middleware(['auth:api', 'scope:user'])->group(function () {
     Route::get('/users', 'UserController@index');
     Route::get('/articles', 'ArticleController@index');
 
     Route::post('/cycleHistories', 'CycleHistoryController@store');
     Route::get('/cycleHistories', 'CycleHistoryController@index');
-    Route::get('/cycleHistories/{id}', 'CycleHistoryController@show');
+    Route::get('/cycleHistories/{cycleHistoryRequest}', 'CycleHistoryController@show');
     Route::put('/cycleHistories', 'CycleHistoryController@update');
-    Route::delete('/cycleHistories', 'CycleHistoryController@destroy');
+    Route::delete('/cycleHistories/{cycleHistoryRequest}', 'CycleHistoryController@destroy');
 
     Route::post('/logInfos', 'LogInfoController@store');
     Route::get('/logInfos', 'LogInfoController@index');

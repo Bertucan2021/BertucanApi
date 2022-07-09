@@ -110,10 +110,10 @@ class CycleHistoryController extends Controller
      * @param  \App\Models\CycleHistory  $cycleHistory
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(CycleHistory $cycleHistoryRequest)
     {
         try {
-            $allCycleHistories = CycleHistory::where('id', $id)->first();
+            $allCycleHistories = CycleHistory::where('id', $cycleHistoryRequest)->first();
             $allCycleHistories->user; 
             return response()
                 ->json(
