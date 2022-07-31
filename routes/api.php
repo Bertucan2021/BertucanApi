@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Controllers;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,6 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::post('/users', 'UserController@store');
+Route::put('/users', 'UserController@update')
+    ->middleware('auth:api');
 Route::middleware(['auth:api', 'scope:user'])->group(function () {
     Route::get('/users', 'UserController@index');
     Route::get('/articles', 'ArticleController@index');
