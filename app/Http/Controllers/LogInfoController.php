@@ -68,34 +68,37 @@ class LogInfoController extends Controller
      */
     public function store(StoreLogInfoRequest $request)
     {
+
         try {
-            $input = $request->all();
+            $listInput = $request->input('log_infos');
             $user = $request->user();
-            $fetchedUser = User::where('id', $user->id)->first();
-            if (!$fetchedUser) {
+            if (!$user) {
                 return response()
                     ->json(
                         HelperClass::responeObject(null, true, Response::HTTP_CREATED, "$this->modelName does not exist.", "$this->modelName must exist for $this->modelName to be recorded", ""),
                         Response::HTTP_NOT_FOUND
                     );
             }
-            $logInfo = new LogInfo($input);
-            $logInfo->user_id = $user->id;
-            $logInfo->status = "active";
-            if ($logInfo->save()) {
-                return response()
-                    ->json(
-                        HelperClass::responeObject($logInfo, true, Response::HTTP_CREATED, "$this->modelName is created.", "A $this->modelName is created.", ""),
-                        Response::HTTP_CREATED
-                    );
-            } else {
-                return response()
-                    ->json(
-                        HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "", "This $this->modelName couldnt be saved."),
-                        Response::HTTP_INTERNAL_SERVER_ERROR
-                    );
+
+            foreach ($listInput as $inLogInfo) {
+                $logInfo = new LogInfo();
+
+                $logInfo->startDate = $inLogInfo['startDate'];
+                $logInfo->endDate = $inLogInfo['endDate'];
+                $logInfo->pregnancyDate = $inLogInfo['pregnancyDate'];
+                $logInfo->phaseChange = $inLogInfo['phaseChange'];
+                $logInfo->status = 'active';
+                $logInfo->user_id = $user->id;
+
+                $logInfo->save();
             }
-        } catch (ModelNotFoundException $ex) { // User not found
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, true, Response::HTTP_CREATED, "Log info created.", "Log info  created.", ""),
+                    Response::HTTP_CREATED
+                );
+        } catch
+        (ModelNotFoundException $ex) { // User not found
             return response()
                 ->json(
                     HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, "The $this->modelName doesnt exist.", "", $ex->getMessage()),
