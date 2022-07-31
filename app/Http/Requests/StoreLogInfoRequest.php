@@ -24,7 +24,10 @@ class StoreLogInfoRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "startDate" => ['required'],
+            "endDate" => ['required'],
+            "pregnancyDate" => ['required'],
+            "phaseChange" => ['required'],
         ];
     }
 }

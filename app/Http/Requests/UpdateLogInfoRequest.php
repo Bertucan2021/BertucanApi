@@ -24,7 +24,12 @@ class UpdateLogInfoRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "id" => ['required'],
+            "startDate" => ['required'],
+            "endDate" => ['required'],
+            "pregnancyDate" => ['required'],
+            "phaseChange" => ['required'],
+            "status" => ['required']
         ];
     }
 }

@@ -8,16 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class LogInfo extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'is_registered',
-        'is_logged',
-        'token',
+        'id',
+        'startDate',
+        'endDate',
+        'pregnancyDate',
+        'phaseChange',
         'user_id',
         'status'
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',
-    ]; 
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
