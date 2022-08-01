@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Exception;
 use Illuminate\Http\Request;
@@ -181,6 +182,7 @@ class UserController extends Controller
                 $user = new User($input);
                 $user->password = Hash::make($request->password);
                 $user->role = "user";
+                $user->status = "active";
                 $user->remember_token = $user->createToken('Laravel Password Grant', [$user->role])->accessToken;
                 if ($request->address) {
                     $address = $request->address;
@@ -266,6 +268,7 @@ class UserController extends Controller
                 $loggedInUser->email = $request->input('email');
                 $loggedInUser->phone_number = $request->input('phone_number');
                 $loggedInUser->birthdate = $request->input('birthdate');
+                $loggedInUser->status = $request->input('status');
 
                 if ($loggedInUser->save()) {
 
@@ -301,6 +304,39 @@ class UserController extends Controller
                     Response::HTTP_UNPROCESSABLE_ENTITY
                 );
         }
+    }
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $loggedInUser = Auth::user();
+        $user = User::where('id', '=', $loggedInUser->id)
+            ->first();
+
+        if (Hash::check($request->input("old_password"), $user->password)) {
+            $user->password = Hash::make($request->input("new_password"));
+            if ($user->save()) {
+                return response()
+                    ->json(
+                        HelperClass::responeObject(null, false, RESPONSE::HTTP_OK, "Password changed successfully.", "Password changed successfully.", ""),
+                        Response::HTTP_UNPROCESSABLE_ENTITY
+                    );
+            } else {
+                return response()
+                    ->json(
+                        HelperClass::responeObject(null, false, RESPONSE::HTTP_INTERNAL_SERVER_ERROR, "Can't change password.", "Internal Server Error.", ""),
+                        Response::HTTP_UNPROCESSABLE_ENTITY
+                    );
+            }
+
+        } else {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNAUTHORIZED, "Can't change password.", "The old password isn't correct.", ""),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
+
+
     }
 
 
