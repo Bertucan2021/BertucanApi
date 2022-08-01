@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -240,64 +241,37 @@ class UserController extends Controller
         }
     }
 
-    public function update(StoreUserRequest $request)
+    public function update(UpdateUserRequest $request)
     {
         try {
             $loggedInUser = Auth::user();
 
-            $input = $request->all();
-            $fileExist = false;
-            if ($request->hasFile('file') != null) {
-                $fileExist = true;
-                $file = $request->file('file');
-                $fileName = $file->getClientOriginalName();
-                $finalName = date('His') . $fileName;
-                $request->file('file')->storeAs('profilepic/', $finalName, 'public');
-            }
-            $user = User::where('email', $request->email)
+            $user = User::where('email', $request->input('email'))
                 ->where('id', '!=', $loggedInUser->id)
                 ->first();
             if (!$user) {
-                $user = User::where('phone_number', $request->phone_number)->first();
+                $user = User::where('phone_number', $request->input('phone_number'))
+                    ->where('id', '!=', $loggedInUser->id)
+                    ->first();
                 if ($user) {
                     return response()
                         ->json(
-                            HelperClass::responeObject(null, false, Response::HTTP_CONFLICT, 'User already exist.', "", "A user already exist by this phonenumber "),
+                            HelperClass::responeObject(null, false, Response::HTTP_CONFLICT, 'User already exists.', "", "A user already exists by this phonenumber "),
                             Response::HTTP_CONFLICT
                         );
                 }
-                $user = new User($input);
-                $user->password = Hash::make($request->password);
-                $user->role = "user";
-                $user->remember_token = $user->createToken('Laravel Password Grant', [$user->role])->accessToken;
-                if ($request->address) {
-                    $address = $request->address;
-                    $address = Address::create($address);
-                    $user->address_id = $address->id;
-                }
-                if ($fileExist) {
-                    $user->profile_picture = "profilepic/" . $finalName;
-                }
-                //$user->status = "active";
-                if ($user->save()) {
-                    $user->address;
-                    if ($fileExist) {
-                        $media = new Media();
-                        $media->url = "profilepic/" . $finalName;
-                        $media->type = 'user';
-                        $media->item_id = $user->id;
-                        if (!$media->save()) {
-                            return response()
-                                ->json(
-                                    HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "", "This media couldnt be saved."),
-                                    Response::HTTP_INTERNAL_SERVER_ERROR
-                                );
-                        }
-                    }
+
+                $loggedInUser->first_name = $request->input('first_name');
+                $loggedInUser->last_name = $request->input('last_name');
+                $loggedInUser->email = $request->input('email');
+                $loggedInUser->phone_number = $request->input('phone_number');
+                $loggedInUser->birthdate = $request->input('birthdate');
+
+                if ($loggedInUser->save()) {
 
                     return response()
                         ->json(
-                            HelperClass::responeObject($user, true, Response::HTTP_CREATED, 'User created.', "A user is created.", ""),
+                            HelperClass::responeObject($user, true, Response::HTTP_CREATED, 'User updated.', "A user is updated.", ""),
                             Response::HTTP_CREATED
                         );
                 } else {
