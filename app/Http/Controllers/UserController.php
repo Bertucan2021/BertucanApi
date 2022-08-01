@@ -23,7 +23,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $user = User::where('status', '!=', 'deleted')
+            $user = User::where('status', '!=', 'removed')
                 ->orWhereNull('status')->get()
                 ->each(function ($item, $key) {
                     $item->address;
@@ -71,7 +71,9 @@ class UserController extends Controller
                         Response::HTTP_BAD_REQUEST
                     );
             }
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)
+                ->where('status', 'active')
+                ->first();
             if ($user) {
                 $line = "73";
                 if (Hash::check($request->password, $user->password)) {
