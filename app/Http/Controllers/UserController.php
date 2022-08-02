@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -248,6 +249,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request)
     {
         try {
+
             $loggedInUser = Auth::user();
 
             $user = User::where('email', $request->input('email'))
@@ -265,12 +267,34 @@ class UserController extends Controller
                         );
                 }
 
-                $loggedInUser->first_name = $request->input('first_name');
-                $loggedInUser->last_name = $request->input('last_name');
-                $loggedInUser->email = $request->input('email');
-                $loggedInUser->phone_number = $request->input('phone_number');
-                $loggedInUser->birthdate = $request->input('birthdate');
-                $loggedInUser->status = $request->input('status');
+                if ($request->hasFile('file') != null) {
+
+                    $file = $request->file('file');
+                    $fileName = $file->getClientOriginalName();
+                    $finalName = date('His') . $fileName;
+                    $request->file('file')->storeAs('profilepic/', $finalName, 'public');
+
+                    $loggedInUser->profile_picture = "profilepic/" . $finalName;
+                    $media = new Media();
+                    $media->url = "profilepic/" . $finalName;
+                    $media->type = 'user';
+                    $media->item_id = $loggedInUser->id;
+                    if (!$media->save()) {
+
+                        return response()
+                            ->json(
+                                HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "", "This media couldnt be saved."),
+                                Response::HTTP_INTERNAL_SERVER_ERROR
+                            );
+                    }
+                }
+                $userRequest = json_decode($request->input('user'));
+                $loggedInUser->first_name = $userRequest->first_name;
+                $loggedInUser->last_name = $userRequest->last_name;
+                $loggedInUser->email = $userRequest->email;
+                $loggedInUser->phone_number = $userRequest->phone_number;
+                $loggedInUser->birthdate = $userRequest->birthdate;
+                $loggedInUser->status = $userRequest->status;
 
                 if ($loggedInUser->save()) {
 

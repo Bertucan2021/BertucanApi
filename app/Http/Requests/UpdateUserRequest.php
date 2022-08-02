@@ -24,21 +24,12 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => ['required', 'max:20'],
-            'last_name' => ['required', 'max:20'],
-            'email' => ['required', 'max:255'],
-            'phone_number' => ['max:30'],
-            'birthdate' => ['max:15'],
-            'status' => ['required', 'max:15']
         ];
     }
 
     public function messages()
     {
         return [
-            'first_name.required' => 'First Name of the user is required.',
-            'last_name.required' => 'Last Name of the user is required.',
-            'email.required' => 'Email of the user is required.',
         ];
     }
 
@@ -50,8 +41,6 @@ class UpdateUserRequest extends FormRequest
     public function filters()
     {
         return [
-            'type' => 'trim|capitalize',
-            'name' => 'trim|capitalize|escape'
         ];
     }
 
