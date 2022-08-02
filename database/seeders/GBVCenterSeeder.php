@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class GBVCenterSeeder extends Seeder
+class GbvCenterSeeder extends Seeder
 {
     /**
      * Run the database seeds.

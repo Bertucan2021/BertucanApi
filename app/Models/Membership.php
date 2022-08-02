@@ -26,6 +26,6 @@ class Membership extends Model
     }
     public function gbvcenter()
     {
-        return $this->hasOne(GBVCenter::class,'membership_id');
+        return $this->hasOne(GbvCenter::class,'membership_id');
     }
 }

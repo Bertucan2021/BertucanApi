@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\GBVCenter;
+use App\Models\GbvCenter;
 use App\Models\Address;
-use App\Http\Requests\StoreGBVCenterRequest;
-use App\Http\Requests\UpdateGBVCenterRequest;
+use App\Http\Requests\StoreGbvCenterRequest;
+use App\Http\Requests\UpdateGbvCenterRequest;
 
-class GBVCenterController extends Controller
+class GbvCenterController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,13 +19,13 @@ class GBVCenterController extends Controller
     public function index()
     {
         try {
-            $allGBVCenter = GBVCenter::where('status', 'active')->get()->each( function ($item, $key){
-                $item->address;          
+            $allGbvCenter = GbvCenter::where('status', 'active')->get()->each( function ($item, $key){
+                $item->address;
             });
             return response()
                 ->json(
                     HelperClass::responeObject(
-                        $allGBVCenter,
+                        $allGbvCenter,
                         true,
                         Response::HTTP_OK,
                         'Successfully fetched.',
@@ -41,15 +41,15 @@ class GBVCenterController extends Controller
                     Response::HTTP_UNPROCESSABLE_ENTITY
                 );
         }
-    } 
+    }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreGBVCenterRequest  $request
+     * @param  \App\Http\Requests\StoreGbvCenterRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreGBVCenterRequest $request)
+    public function store(StoreGbvCenterRequest $request)
     {
         try{
             $input = $request->all();
@@ -61,9 +61,9 @@ class GBVCenterController extends Controller
                     $finalName= date('His') . $fileName;
                     $request->file('file')->storeAs('gbv/',$finalName,'public');
             }
-            
-            $gbvCenter= new GBVCenter($input);
-            if($fileExist){ 
+
+            $gbvCenter= new GbvCenter($input);
+            if($fileExist){
                     $gbvCenter->logo="gbv/".$finalName;
             }
             $gbvCenter->status="active";
@@ -103,18 +103,18 @@ class GBVCenterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\GBVCenter  $gBVCenter
+     * @param  \App\Models\GbvCenter  $gBVCenter
      * @return \Illuminate\Http\Response
      */
     public function show( $id)
     {
         try {
-            $allGBVCenter = GBVCenter::where('id', $id)->first();
-            $allGBVCenter->address; 
+            $allGbvCenter = GbvCenter::where('id', $id)->first();
+            $allGbvCenter->address;
             return response()
                 ->json(
                     HelperClass::responeObject(
-                        $allGBVCenter,
+                        $allGbvCenter,
                         true,
                         Response::HTTP_OK,
                         'Successfully fetched.',
@@ -136,11 +136,11 @@ class GBVCenterController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateGBVCenterRequest  $request
-     * @param  \App\Models\GBVCenter  $gBVCenter
+     * @param  \App\Http\Requests\UpdateGbvCenterRequest  $request
+     * @param  \App\Models\GbvCenter  $gBVCenter
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateGBVCenterRequest $request, GBVCenter $gBVCenter)
+    public function update(UpdateGbvCenterRequest $request, GbvCenter $gBVCenter)
     {
         //
     }
@@ -148,10 +148,10 @@ class GBVCenterController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\GBVCenter  $gBVCenter
+     * @param  \App\Models\GbvCenter  $gBVCenter
      * @return \Illuminate\Http\Response
      */
-    public function destroy(GBVCenter $gBVCenter)
+    public function destroy(GbvCenter $gBVCenter)
     {
         //
     }

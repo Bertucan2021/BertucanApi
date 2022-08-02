@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\GBVCenter;
+use App\Models\GbvCenter;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class GBVCenterPolicy
+class GbvCenterPolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class GBVCenterPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\GBVCenter  $gBVCenter
+     * @param  \App\Models\GbvCenter  $gBVCenter
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, GBVCenter $gBVCenter)
+    public function view(User $user, GbvCenter $gBVCenter)
     {
         //
     }
@@ -48,10 +48,10 @@ class GBVCenterPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\GBVCenter  $gBVCenter
+     * @param  \App\Models\GbvCenter  $gBVCenter
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, GBVCenter $gBVCenter)
+    public function update(User $user, GbvCenter $gBVCenter)
     {
         //
     }
@@ -60,10 +60,10 @@ class GBVCenterPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\GBVCenter  $gBVCenter
+     * @param  \App\Models\GbvCenter  $gBVCenter
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, GBVCenter $gBVCenter)
+    public function delete(User $user, GbvCenter $gBVCenter)
     {
         //
     }
@@ -72,10 +72,10 @@ class GBVCenterPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\GBVCenter  $gBVCenter
+     * @param  \App\Models\GbvCenter  $gBVCenter
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, GBVCenter $gBVCenter)
+    public function restore(User $user, GbvCenter $gBVCenter)
     {
         //
     }
@@ -84,10 +84,10 @@ class GBVCenterPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\GBVCenter  $gBVCenter
+     * @param  \App\Models\GbvCenter  $gBVCenter
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, GBVCenter $gBVCenter)
+    public function forceDelete(User $user, GbvCenter $gBVCenter)
     {
         //
     }

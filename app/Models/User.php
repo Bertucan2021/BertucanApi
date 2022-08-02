@@ -37,30 +37,36 @@ class User extends Authenticatable
 
     public function article()
     {
-        return $this->hasOne(Article::class,'article_by');
+        return $this->hasOne(Article::class, 'article_by');
     }
+
     public function address()
     {
         return $this->belongsTo(Address::class);
     }
+
     public function membership()
     {
         return $this->belongsTo(Membership::class);
     }
+
     public function media()
     {
-        return $this->hasMany(Media::class,'item_id');
+        return $this->hasMany(Media::class, 'item_id');
     }
+
     public function cycleHistory()
     {
-        return $this->hasOne(CycleHistory::class,'user_id');
+        return $this->hasOne(CycleHistory::class, 'user_id');
     }
+
     public function logInfo()
     {
-        return $this->hasOne(LogInfo::class,'user_id');
+        return $this->hasOne(LogInfo::class, 'user_id');
     }
+
     public function userSymptomLog()
     {
-        return $this->hasOne(UserSymptomLog::class,'user_id');
+        return $this->hasOne(UserSymptomLog::class, 'user_id');
     }
 }

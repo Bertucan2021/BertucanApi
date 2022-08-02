@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'message',
         'reported_by',
@@ -17,9 +18,21 @@ class Report extends Model
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',
-    ]; 
-    public function abuse_type()
+    ];
+
+    public function abuseType()
     {
-        return $this->belongsTo(AbuseType::class,'abuse_type_id');
+        return $this->belongsTo(AbuseType::class, 'abuse_types_id','id');
     }
+
+    public function gbvCenter()
+    {
+        return $this->belongsTo(GbvCenter::class, 'gbv_center', 'id');
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
 }

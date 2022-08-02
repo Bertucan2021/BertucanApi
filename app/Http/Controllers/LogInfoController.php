@@ -94,7 +94,7 @@ class LogInfoController extends Controller
             }
             return response()
                 ->json(
-                    HelperClass::responeObject(null, true, Response::HTTP_CREATED, "Log info created.", "Log info  created.", ""),
+                    HelperClass::responeObject($listInput, true, Response::HTTP_CREATED, "Log info created.", "Log info  created.", ""),
                     Response::HTTP_CREATED
                 );
         } catch

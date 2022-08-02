@@ -92,14 +92,17 @@ Route::post('/adTypes', 'AdTypeController@store');
 Route::put('/adTypes', 'AdTypeController@update');
 Route::delete('/adTypes', 'AdTypeController@destroy');
 
-Route::get('/gbvcenters/{id}', 'GBVCenterController@show');
-Route::get('/gbvcenters', 'GBVCenterController@index');
-Route::post('/gbvcenters', 'GBVCenterController@store');
-Route::put('/gbvcenters', 'GBVCenterController@update');
-Route::delete('/gbvcenters', 'GBVCenterController@destroy');
+Route::get('/gbvcenters/{id}', 'GbvCenterController@show');
+Route::get('/gbvcenters', 'GbvCenterController@index');
+Route::post('/gbvcenters', 'GbvCenterController@store');
+Route::put('/gbvcenters', 'GbvCenterController@update');
+Route::delete('/gbvcenters', 'GbvCenterController@destroy');
 
 
-Route::post('/reports', 'ReportController@store');
+Route::post('/reports', 'ReportController@store')
+    ->middleware('auth:api');
+
+Route::get('/reports', 'ReportController@index');
 
 Route::post('/media', 'MediaController@store');
 
