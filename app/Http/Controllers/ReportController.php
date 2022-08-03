@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GbvCenter;
 use App\Models\Report;
 use App\Models\AbuseType;
 use App\Http\Requests\StoreReportRequest;
@@ -76,14 +77,29 @@ class ReportController extends Controller
                         Response::HTTP_CONFLICT
                     );
             }
-            $report = new Report($input);
 
+            $gbv_center = GbvCenter::where('id', $request->gbv_center)->first();
+            if (!$gbv_center) {
+                return response()
+                    ->json(
+                        HelperClass::responeObject(null, false, Response::HTTP_CONFLICT, 'GBV center does not exist.', "", "A GBV center does not exist by this id."),
+                        Response::HTTP_CONFLICT
+                    );
+            }
+
+
+            $report = new Report($input);
             $report->status = "active";
             $report->gbv_center = $request->gbv_center;
             $report->abuse_types_id = $request->abuse_types_id;
+            $report->contact_phone_number = $request->contact_phone_number;
+            $report->contact_address = $request->contact_address;
+
             $report->user_id = Auth::user()->id;
+            echo $fileExist;
             if ($report->save()) {
                 if ($fileExist) {
+
                     $media = new Media();
                     $media->url = "report/" . $finalName;
                     $media->type = 'report';
