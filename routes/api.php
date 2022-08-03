@@ -23,6 +23,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/users', 'UserController@store');
 Route::post('/users/update', 'UserController@update')
     ->middleware('auth:api');
+Route::get('/users/getLoggedInUser', 'UserController@getLoggedInUser')
+    ->middleware('auth:api');
 Route::put('/users/changePassword', 'UserController@changePassword')
     ->middleware('auth:api');
 

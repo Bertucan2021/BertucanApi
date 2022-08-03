@@ -300,7 +300,7 @@ class UserController extends Controller
 
                     return response()
                         ->json(
-                            HelperClass::responeObject($user, true, Response::HTTP_CREATED, 'User updated.', "A user is updated.", ""),
+                            HelperClass::responeObject($loggedInUser, true, Response::HTTP_CREATED, 'User updated.', "A user is updated.", ""),
                             Response::HTTP_CREATED
                         );
                 } else {
@@ -365,6 +365,15 @@ class UserController extends Controller
 
     }
 
+
+    public function getLoggedInUser()
+    {
+        return response()
+            ->json(
+                HelperClass::responeObject(Auth::user(), true, Response::HTTP_OK, 'Successfully deleted.', "User is deleted sucessfully.", ""),
+                Response::HTTP_OK
+            );
+    }
 
     public function destroy(Request $request)
     {
