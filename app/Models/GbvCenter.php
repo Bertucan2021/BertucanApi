@@ -24,7 +24,7 @@ class GbvCenter extends Model
 
     public function address()
     {
-        return $this->belongsTo(Address::class);
+        return $this->belongsTo(Address::class,'address_id','id');
     }
 
     public function membership()

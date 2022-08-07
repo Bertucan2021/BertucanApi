@@ -45,10 +45,47 @@ class ArticleController extends Controller
         }
     }
 
+    public function fetchbylanguage($language)
+    {
+        try {
+            $allArticle = [];
+            if ($language === 'ALL') {
+                $allArticle = Article::where('status', 'active')->get()->each(function ($item, $key) {
+                    $item->user;
+                });
+            } else {
+                $allArticle = Article::where('status', 'active')
+                    ->where('language', $language)
+                    ->get()->each(function ($item, $key) {
+                        $item->user;
+                    });
+            }
+            //->each(function($article, $key)){$article->media;};
+            return response()
+                ->json(
+                    HelperClass::responeObject(
+                        $allArticle,
+                        true,
+                        Response::HTTP_OK,
+                        'Successfully fetched.',
+                        "Article are fetched sucessfully.",
+                        ""
+                    ),
+                    Response::HTTP_OK
+                );
+        } catch (Exception $ex) {
+            return response()
+                ->json(
+                    HelperClass::responeObject(null, false, RESPONSE::HTTP_UNPROCESSABLE_ENTITY, 'Internal server error.', "", $ex->getMessage()),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreArticleRequest  $request
+     * @param \App\Http\Requests\StoreArticleRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreArticleRequest $request)
@@ -77,7 +114,7 @@ class ArticleController extends Controller
             } else {
                 return response()
                     ->json(
-                        HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "",  "This article couldnt be saved."),
+                        HelperClass::responeObject(null, false, Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal error', "", "This article couldnt be saved."),
                         Response::HTTP_INTERNAL_SERVER_ERROR
                     );
             }
@@ -99,7 +136,7 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Article  $article
+     * @param \App\Models\Article $article
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -133,8 +170,8 @@ class ArticleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateArticleRequest  $request
-     * @param  \App\Models\Article  $article
+     * @param \App\Http\Requests\UpdateArticleRequest $request
+     * @param \App\Models\Article $article
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateArticleRequest $request, Article $article)
@@ -145,7 +182,7 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Article  $article
+     * @param \App\Models\Article $article
      * @return \Illuminate\Http\Response
      */
     public function destroy(Article $article)

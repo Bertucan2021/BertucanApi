@@ -28,10 +28,11 @@ Route::get('/users/getLoggedInUser', 'UserController@getLoggedInUser')
 Route::put('/users/changePassword', 'UserController@changePassword')
     ->middleware('auth:api');
 
-
+Route::get('/articles', 'ArticleController@index');
+Route::get('/articles/byLanguage/{language}', 'ArticleController@fetchbylanguage');
 Route::middleware(['auth:api', 'scope:user'])->group(function () {
     Route::get('/users', 'UserController@index');
-    Route::get('/articles', 'ArticleController@index');
+
 
     Route::post('/cycleHistories', 'CycleHistoryController@store');
     Route::get('/cycleHistories', 'CycleHistoryController@index');
