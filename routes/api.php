@@ -21,6 +21,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::post('/users', 'UserController@store');
+Route::post('/requestpasswordreset', 'PasswordResetController@requestpasswordreset');
+Route::post('/resetpassword', 'PasswordResetController@resetpassword');
+
 Route::post('/users/update', 'UserController@update')
     ->middleware('auth:api');
 Route::get('/users/getLoggedInUser', 'UserController@getLoggedInUser')
