@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sample Email</title>
+    <title>Password Reset</title>
 </head>
 <body>
-
-<h1>This is test mail from bertucan {{$code}}</h1>
-<p>Laravel 9 send email example</p>
-
+<p>Bertucan.com Password reset code</p>
+<h1>{{$code}}</h1>
 </body>
 </html>

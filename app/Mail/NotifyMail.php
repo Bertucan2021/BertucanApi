@@ -31,7 +31,7 @@ class NotifyMail extends Mailable
     public function build()
     {
         return $this
-            ->subject($this->code)
-            ->view('view.email.email');
+            ->subject("Reset password request.")
+            ->view('email.email');
     }
 }

@@ -27,7 +27,7 @@ class PasswordResetController extends Controller
             $pass_reset->code = Hash::make($code);
             $pass_reset->save();
             //send email
-            $this . sendemail('binyamasrat@gmail.com', "1010");
+            $this->sendemail($request->email, $code);
             return response()
                 ->json(
                     HelperClass::responeObject(
@@ -66,6 +66,20 @@ class PasswordResetController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->first();
 
+            if (!$passwordReset) {
+                return response()
+                    ->json(
+                        HelperClass::responeObject(
+                            "",
+                            true,
+                            Response::HTTP_FORBIDDEN,
+                            'You did not request for password reset.',
+                            'You did not request for password reset.',
+                            'You did not request for password reset.'
+                        ),
+                        Response::HTTP_OK
+                    );
+            }
             if (Hash::check($request->input("code"), $passwordReset->code)) {
                 $user->password = Hash::make($request->input("new_password"));
                 $user->save();
@@ -116,7 +130,6 @@ class PasswordResetController extends Controller
 
     public function sendemail($email, $code)
     {
-
         Mail::to($email)->send(new NotifyMail($code));
 
         if (Mail::failures()) {
