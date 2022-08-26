@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\GbvCenter;
 use App\Models\Address;
@@ -53,6 +54,7 @@ class GbvCenterController extends Controller
     {
         try {
             $input = $request->all();
+
             $fileExist = false;
             if ($request->hasFile('file') != null) {
                 $fileExist = true;
@@ -61,9 +63,13 @@ class GbvCenterController extends Controller
                 $finalName = date('His') . $fileName;
                 $request->file('file')->storeAs('gbv/', $finalName, 'public');
             }
-
             $gbvCenter = new GbvCenter();
-            $gbvCenter->status = "active";
+            if ($request->input('id')) {
+                $gbvCenter = GbvCenter::where('id', $request->input('id'))->first();
+                $gbvCenter->status = $request->input('status');
+            } else {
+                $gbvCenter->status = "active";
+            }
             $gbvCenter->name = $input['name'];
             $gbvCenter->description = $input['description'];
             $gbvCenter->phone_number = $input['phone_number'];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
@@ -100,11 +101,26 @@ class ArticleController extends Controller
                 $finalName = date('His') . $fileName;
                 $request->file('file')->storeAs('article/', $finalName, 'public');
             }
-            $article = new Article($input);
-            $article->status = "active";
+
+            if ($request->input('id')) {
+                $article = Article::where('id', $request->input('id'))->first();
+                $article->title = $request->input('title');
+                $article->introduction = $request->input('introduction');
+                $article->icon = $request->input('icon');
+                $article->body = $request->input('body');
+                $article->small_description = $request->input('small_description');
+                $article->article_by = $request->input('article_by');
+                $article->type = $request->input('type');
+                $article->language = $request->input('language');
+                $article->status = $request->input('status');
+            } else {
+                $article = new Article($input);
+                $article->status = "active";
+            }
             if ($fileExist) {
                 $article->icon = "article/" . $finalName;
             }
+
             if ($article->save()) {
                 return response()
                     ->json(
