@@ -121,10 +121,17 @@ class ArticleController extends Controller
                 $article->icon = "article/" . $finalName;
             }
 
+            $response_message = "Article created.";
+            if ($request->input('id') && $request->input('status') == 'removed') {
+                echo "hrer";
+                $response_message = "Article center removed.";
+            } else if ($request->input('id')) {
+                $response_message = "Article center updated.";
+            }
             if ($article->save()) {
                 return response()
                     ->json(
-                        HelperClass::responeObject($article, true, Response::HTTP_CREATED, 'Article created.', "An article is created.", ""),
+                        HelperClass::responeObject($article, true, Response::HTTP_CREATED, $response_message, "An " . $response_message, ""),
                         Response::HTTP_CREATED
                     );
             } else {

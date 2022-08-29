@@ -102,9 +102,15 @@ class GbvCenterController extends Controller
                 $gbvCenter->address_id = $address->id;
                 $gbvCenter->save();
 
+                $response_message = "GBV center created.";
+                if ($request->input('id') && $request->input('status') == 'removed') {
+                    $response_message = "GBV center removed.";
+                } else if ($request->input('id')) {
+                    $response_message = "GBV center updated.";
+                }
                 return response()
                     ->json(
-                        HelperClass::responeObject($gbvCenter, true, Response::HTTP_CREATED, 'GBV center created.', "A GBV center is created.", ""),
+                        HelperClass::responeObject($gbvCenter, true, Response::HTTP_CREATED, $response_message, "A " . $response_message, ""),
                         Response::HTTP_CREATED
                     );
             } else {
